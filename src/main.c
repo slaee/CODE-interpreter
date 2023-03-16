@@ -19,6 +19,7 @@ int main() {
 
     // This should print 35 a 5 1 10
     // 35 is TOKEN_IDENTIFIER
+    // so 'a' is an identifier
     printf("%d %s %d %d %d" , interp.current_token.type, interp.current_token.lexeme, interp.pos, interp.line, interp.input_size);
 
     return 0;
