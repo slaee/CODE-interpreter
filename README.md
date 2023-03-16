@@ -11,5 +11,5 @@ $ docker build . -t code-interpreter:dev
 To run the project
 
 ```bash
-sudo docker run --rm -t --name code -v $(pwd):/src code-interpreter:dev
+sudo docker run --rm -it --name code -v $(pwd):/src code-interpreter:dev
 ```
