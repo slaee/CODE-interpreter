@@ -6,4 +6,5 @@ set(CMAKE_BUILD_TYPE Debug)
 add_executable(
     code-interpreter
     src/main.c
+    Parser/token.c
 )
