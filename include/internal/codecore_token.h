@@ -1,6 +1,8 @@
 #ifndef _CODECORE_TOKEN_H_
 #define _CODECORE_TOKEN_H_
 
+#include <stdlib.h>
+
 // Enumeration of all the possible token types
 enum TokenType {
     // Special tokens
