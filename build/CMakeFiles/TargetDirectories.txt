@@ -1,3 +1,0 @@
-/src/build/CMakeFiles/code-interpreter.dir
-/src/build/CMakeFiles/edit_cache.dir
-/src/build/CMakeFiles/rebuild_cache.dir

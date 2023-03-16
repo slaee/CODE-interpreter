@@ -1,1 +1,0 @@
-/usr/bin/cc -g -rdynamic "CMakeFiles/code-interpreter.dir/src/main.c.o" -o code-interpreter 
