@@ -1,71 +1,75 @@
-#ifndef _CODECORE_TOKEN_H_
-#define _CODECORE_TOKEN_H_
+#ifndef _CODECORE_H_
+#define _CODECORE_H_
+
+#undef EOF
 
 #include <stdlib.h>
+#include <regex.h>
+
+#define INVALID -1
 
 // Enumeration of all the possible token types
 enum TokenType {
     // Special tokens
-    TOKEN_INVALID,
-    TOKEN_EOF,
-    TOKEN_NEWLINE,
+    EOF,
+    NEWLINE,
 
     // Operators
-    TOKEN_PLUS,
-    TOKEN_MINUS,
-    TOKEN_ASTERISK,
-    TOKEN_SLASH,
-    TOKEN_PERCENT,
-    TOKEN_LEFT_PAREN,
-    TOKEN_RIGHT_PAREN,
-    TOKEN_LEFT_BRACKET,
-    TOKEN_RIGHT_BRACKET,
-    TOKEN_LESS,
-    TOKEN_GREATER,
-    TOKEN_EQUAL,
-    TOKEN_DOLLAR,
-    TOKEN_AMPERSAND,
-    TOKEN_COMMA,
-    TOKEN_COLON,
+    PLUS,
+    MINUS,
+    ASTERISK,
+    SLASH,
+    PERCENT,
+    LEFT_PAREN,
+    RIGHT_PAREN,
+    LEFT_BRACKET,
+    RIGHT_BRACKET,
+    LESS,
+    GREATER,
+    EQUAL,
+    DOLLAR,
+    AMPERSAND,
+    COMMA,
+    COLON,
 
-    TOKEN_EQUAL_EQUAL,
-    TOKEN_NOT_EQUAL,
-    TOKEN_GREATER_EQUAL,
-    TOKEN_LESS_EQUAL,
+    EQUAL_EQUAL,
+    NOT_EQUAL,
+    GREATER_EQUAL,
+    LESS_EQUAL,
 
-    TOKEN_AND,
-    TOKEN_OR,
-    TOKEN_NOT,
+    AND,
+    OR,
+    NOT,
 
     // Keywords
-    TOKEN_BEGIN,
-    TOKEN_END,
-    TOKEN_INT,
-    TOKEN_CHAR,
-    TOKEN_BOOL,
-    TOKEN_FLOAT,
-    TOKEN_TRUE,
-    TOKEN_FALSE,
-    TOKEN_DISPLAY,
+    BEGIN,
+    END,
+    INT,
+    CHAR,
+    BOOL,
+    FLOAT,
+    TRUE,
+    FALSE,
+    DISPLAY,
 
     // Literals
-    TOKEN_IDENTIFIER,
-    TOKEN_INTEGER,
-    TOKEN_CHARACTER,
-    TOKEN_STRING,
-    TOKEN_FLOATING_POINT,
+    IDENTIFIER,
+    INTEGER,
+    CHARACTER,
+    STRING,
+    FLOATING_POINT,
 };
 
 // Special definitions for the token types
 
-#define ISTERMINAL(x)       (x >= TOKEN_BEGIN && x <= TOKEN_DISPLAY)
-#define ISNONTERMINAL(x)    (x >= TOKEN_IDENTIFIER && x <= TOKEN_FLOATING_POINT)
-#define ISEOF(x)            (x == TOKEN_EOF)
-#define ISWHITESPACE(x)     (x == TOKEN_NEWLINE)
+#define ISTERMINAL(x)       (x >= BEGIN && x <= DISPLAY)
+#define ISNONTERMINAL(x)    (x >= IDENTIFIER && x <= FLOATING_POINT)
+#define ISEOF(x)            (x == EOF)
+#define ISWHITESPACE(x)     (x == NEWLINE)
 
 //
 
-int CodeToken_OneChar(int);
-int CodeToken_TwoChars(int, int);
+int CodeOneChar(int);
+int CodeTwoChars(int, int);
 
 #endif

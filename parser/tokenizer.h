@@ -34,5 +34,7 @@ int is_identifier_char(char c);
 void advance(Interpreter* interp);
 void skip_whitespace(Interpreter* interp);
 void read_identifier(Interpreter* interp);
+void next_token(Interpreter* interp);
+void read_number(Interpreter* interp);
 
 #endif
