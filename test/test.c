@@ -43,8 +43,10 @@ void read_file(char* path, char* buffer) {
 
 int main() {
     // test 1
-    int number_of_tests = 1;
+    int number_of_tests = 2;
     char* buffer = malloc(1024);
+    lexer* lex;
+    TokenStream* stream;
 
     int test;
     for(test = 0; test < number_of_tests; ++test) {
@@ -52,8 +54,8 @@ int main() {
             case 0:
                 printf("---- Test 1: \n");
                 read_file("test/test1.code", buffer);
-                lexer* lex = Lexer(buffer, strlen(buffer));
-                TokenStream* stream = tokenize(lex);
+                lex = Lexer(buffer, strlen(buffer));
+                stream = tokenize(lex);
 
                 // while (peek_ts(stream) != TOKEN_EOF) {
                 //     Token* token = advance_ts(stream);
@@ -179,6 +181,20 @@ int main() {
                 printf("-- AST TEST ... [" ANSI_YELLOW "NO TEST CASES" ANSI_RESET "]\n");
 
                 printf("-- EVALUATION TEST ... [" ANSI_YELLOW "NO TEST CASES" ANSI_RESET "]\n");
+                free(buffer);
+                break;
+            
+            case 1: 
+                printf("---- Test 2: \n");
+                read_file("test/test2.code", buffer);
+                lex = Lexer(buffer, strlen(buffer));
+                stream = tokenize(lex);
+
+                while (peek_ts(stream) != TOKEN_EOF) {
+                    Token* token = advance_ts(stream);
+                    print_token(token);
+                }
+
                 break;
         }
     }   
