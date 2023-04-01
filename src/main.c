@@ -1,29 +1,61 @@
 #include <stdio.h>
 #include <string.h>
-#include "../parser/tokenizer.h"
+#include <stdlib.h>
+#include "parser/lexer.h"
+
+// this will be used to read the file and store it in a buffer
+void read_file(char* path, char* buffer) {
+    // read file
+    FILE *fp = fopen("test/test1.code", "r");
+
+    if (fp == NULL) {
+        printf("Error opening file\n");
+        exit(1);
+    }
+
+    // // Get the size of the file
+    fseek(fp, 0, SEEK_END);
+    long file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    
+    // Allocate a buffer for the file contents
+    if (buffer == NULL) {
+        printf("Error allocating memory\n");
+        exit(1);
+    }
+
+    // Read the file contents into the buffer
+    fread(buffer, file_size, 1, fp);
+    buffer[file_size] = EOF; 
+    fclose(fp);
+}
+
 
 int main() {
+    char* buffer = malloc(1024);
+    read_file("test/test1.code", buffer);
 
-    /**
-     * Basic testing phase
-     */
-    Interpreter interp;
+    // START YOUR DEBUGGIN HERE
 
-    interp.input = "INT a = 5;";
-    interp.input_size = strlen(interp.input);
-    interp.pos = 3;
-    interp.line = 1;
+    // create lexer
+    lexer* lex = Lexer(buffer, strlen(buffer));
+    // tokenize
+    TokenStream* stream = tokenize(lex);
+    Token* token;
+    
+    /// MULTIPLE RETREIVAL
+    // peek_ts(stream);
+    // token = advance_ts(stream);
+    // print_token(token);
 
-    // removed white spaces so the interpreter input will be converted as 
-    // INTa=5;
-    // but this is not the case, we need to split into words as well to become a token
-    skip_whitespace(&interp);
-    read_identifier(&interp);
+    // printf("%d", peek_ts(stream));
+    // token = advance_ts(stream);
+    // print_token(token);
 
-    // This should print 35 a 5 1 10
-    // 35 is TOKEN_IDENTIFIER
-    // so 'a' is an identifier
-    printf("%d %s %d %d %d" , interp.current_token.type, interp.current_token.lexeme, interp.pos, interp.line, interp.input_size);
-
+    /// MULTIPLE RETREIVAL USING LOOP
+    // while (peek_ts(stream) != TOKEN_EOF) {
+    //     Token* token = advance_ts(stream);
+    //     print_token(token);
+    // }
     return 0;
 }
