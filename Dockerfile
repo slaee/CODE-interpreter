@@ -14,5 +14,5 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cm
     && rm /tmp/cmake-install.sh
 
 ENV PATH="/usr/bin/cmake/bin:${PATH}"
-
-CMD cmake . -B build && cmake --build build; ./build/code-interpreter
+ENV TYPE="Debug"
+CMD cmake -DCMAKE_BUILD_TYPE=$TYPE . -B build && cmake --build build --config $TYPE; ./build/code-interpreter

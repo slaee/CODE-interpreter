@@ -10,6 +10,8 @@ $ docker build . -t code-interpreter:dev
 
 To run the project
 
+CMAKE Build Types: Debug, Release, Test
+
 ```bash
-sudo docker run --rm -it --name code -v $(pwd):/src code-interpreter:dev
+sudo sudo docker run --rm -it -e TYPE=Test --name code -v $(pwd):/src code-interpreter:dev
 ```

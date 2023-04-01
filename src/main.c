@@ -44,9 +44,9 @@ int main() {
     Token* token;
     
     /// MULTIPLE RETREIVAL
-    // peek_ts(stream);
-    // token = advance_ts(stream);
-    // print_token(token);
+    peek_ts(stream);
+    token = advance_ts(stream);
+    print_token(token);
 
     // printf("%d", peek_ts(stream));
     // token = advance_ts(stream);
@@ -57,5 +57,6 @@ int main() {
     //     Token* token = advance_ts(stream);
     //     print_token(token);
     // }
+    free(lex);
     return 0;
 }
