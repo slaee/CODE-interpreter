@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(code-interpreter)
 
 include_directories(./include/internal)
+include_directories(./include/utils)
 
 # Set source files based on environment
 if(CMAKE_BUILD_TYPE MATCHES Debug)
