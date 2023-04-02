@@ -70,11 +70,13 @@ typedef struct token_stream {
     int length;
     int current;
 } TokenStream;
-
 int peek_ts(TokenStream* ts);
+
 Token* advance_ts(TokenStream* ts);
+
 int CodeOne_Char(char c1);
 int CodeTwo_Chars(char c1, char c2);
+
 void print_token(Token* token);
 
 #endif

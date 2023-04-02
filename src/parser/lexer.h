@@ -14,10 +14,12 @@ typedef struct lexer {
 
 lexer* Lexer(char* source, int len);
 void lexer_free(lexer* lexer);
+
 int peek(lexer* lexer);
 int advance(lexer* lexer);
 TokenStream* tokenize(lexer* lexer);
 Token* scan(lexer* lexer);
+
 void error(const char* msg, int line, int col);
 
 #endif
