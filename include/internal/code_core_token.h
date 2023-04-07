@@ -3,6 +3,7 @@
 
 enum TokenType {
     TOKEN_EOF,          // 0
+    TOKEN_NEWLINE,
 
     // operators
     TOKEN_PLUS,         // 1
@@ -20,6 +21,7 @@ enum TokenType {
     TOKEN_RBRACKET,     // 13
     TOKEN_GREATERTHAN,  // 14
     TOKEN_LESSTHAN,     // 15
+    TOKEN_EQUAL,
     TOKEN_EQEQUAL,      // 16
     TOKEN_LESSEQUAL,    // 17
     TOKEN_GREATEREQUAL, // 18
@@ -42,18 +44,25 @@ enum TokenType {
     TOKEN_END,          // 31
     TOKEN_INT,          // 32
     TOKEN_CHAR,         // 33
+    TOKEN_FLOAT,
     TOKEN_BOOL,         // 34
     TOKEN_SCAN,         // 35
     TOKEN_DISPLAY,      // 36
     TOKEN_IF,           // 37
     TOKEN_ELSE,         // 38
     TOKEN_WHILE,        // 39
+    TOKEN_DO,
+    TOKEN_FOR,
+    TOKEN_SWITCH,
+    TOKEN_CASE,
+    TOKEN_CONTINUE,
+    TOKEN_FUNC,
+    TOKEN_RETURN,
 
     // literals
     TOKEN_IDENTIFIER,   // 40
-    TOKEN_ASSIGN,       // 41
     TOKEN_NUMBER,       // 42
-    TOKEN_FLOATNUMBER,  // 43
+    TOKEN_FNUMBER,
     TOKEN_STRING,       // 44
     TOKEN_BOOLEAN,      // 45
     TOKEN_CHARACTER,    // 46
@@ -62,21 +71,6 @@ enum TokenType {
 
 typedef struct token {
     enum TokenType type;
-    char* lexeme;
+    char* value;
 } Token;
-
-typedef struct token_stream {
-    Token* next;
-    int length;
-    int current;
-} TokenStream;
-int peek_ts(TokenStream* ts);
-
-Token* advance_ts(TokenStream* ts);
-
-int CodeOne_Char(char c1);
-int CodeTwo_Chars(char c1, char c2);
-
-void print_token(Token* token);
-
 #endif
