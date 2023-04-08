@@ -1,0 +1,6 @@
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+d = (a < b AND c == 200)
+DISPLAY: d
+END CODE
