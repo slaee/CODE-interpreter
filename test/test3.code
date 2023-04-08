@@ -1,0 +1,6 @@
+# asdasdasd
+BEGIN CODE
+INT xyz = 1, abc=100
+# xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [[] & xyz & []]
+END CODE
