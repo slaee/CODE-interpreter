@@ -9,6 +9,10 @@
 #define BLANK 32
 #define TAB 9
 #define NEWLINE 10
+#define VTAB 11
+#define FORMFEED 12
+#define CARRIAGE_RETURN 13
+
 
 #define START_STATE 0
 
@@ -38,11 +42,7 @@ const char* tokentype_str_value[] = {
     [TOKEN_BEGIN]       = "BEGIN",
     [TOKEN_CODE]        = "CODE",
     [TOKEN_END]         = "END",
-    [TOKEN_INT]         = "INT",
-    [TOKEN_CHAR]        = "CHAR",
-    [TOKEN_BOOL]        = "BOOL",
-    [TOKEN_SCAN]        = "SCAN",
-    [TOKEN_DISPLAY]     = "DISPLAY",
+    [TOKEN_TYPE]        = "TYPE",
     [TOKEN_IF]          = "IF",
     [TOKEN_ELSE]        = "ELSE",
     [TOKEN_WHILE]       = "WHILE",
@@ -58,11 +58,13 @@ const char* tokentype_str_value[] = {
     [TOKEN_FNUMBER]     = "FNUMBER",
     [TOKEN_IDENTIFIER]  = "IDENTIFIER",
     [TOKEN_CHARACTER]   = "CHARACTER",
+    [TOKEN_STRING]      = "STRING",
     [TOKEN_FUNC]        = "FUNC",
     [TOKEN_AND]         = "AND",
     [TOKEN_OR]          = "OR",
     [TOKEN_NOT]         = "NOT",
     [TOKEN_EOF]         = "EOF",
+    [TOKEN_NEWLINE]     = "NEWLINE",
     [TOKEN_PLUS]        = "+",
     [TOKEN_MINUS]       = "-",
     [TOKEN_STAR]        = "*",
@@ -86,8 +88,8 @@ const char* tokentype_str_value[] = {
 };
 
 // lex initializer
-lexer* init_code_lexer(char* source, int len) {
-    lexer* lex = (lexer*) malloc(sizeof(lexer));
+Lexer* init_code_lexer(char* source, int len) {
+    Lexer* lex = (Lexer*) malloc(sizeof(Lexer));
     lex->source = source;
     lex->len = len;
     lex->pos = 0;
@@ -106,11 +108,11 @@ Token* create_token(int type, char* lexeme) {
     return token;
 }
 
-int lex_peek(lexer* lexer) {
+int lex_peek(Lexer* lexer) {
     return lexer->current_char;
 }
 
-int lex_advance(lexer* lexer) {
+int lex_advance(Lexer* lexer) {
     if (lexer->current_char != EOF && lexer->pos < lexer->len) {
         lexer->pos++;
         lexer->col++;
@@ -119,27 +121,34 @@ int lex_advance(lexer* lexer) {
     return lexer->current_char;
 }
 
-char* lex_get_char_as_string(lexer* lexer) {
+int lex_lookahead(Lexer* lexer) {
+    if (lexer->pos + 1 < lexer->len) {
+        return lexer->source[lexer->pos + 1];
+    }
+    return EOF;
+}
+
+char* lex_get_char_as_string(Lexer* lexer) {
     char* str = (char*) malloc(sizeof(char) * 2);
     str[0] = lex_peek(lexer);
     str[1] = '\0';
     return str;
 }
 
-void lex_skip_whitespace(lexer* lexer) {
-    while(lex_peek(lexer) == BLANK || lex_peek(lexer) == TAB || lex_peek(lexer) == NEWLINE) {
-        if(lex_peek(lexer) == NEWLINE) {
-            lexer->line++;
-            lexer->col = 1;
-        }
+void lex_skip_whitespace(Lexer* lexer) {
+    while(lex_peek(lexer) == BLANK 
+          || lex_peek(lexer) == TAB
+          || lex_peek(lexer) == VTAB
+          || lex_peek(lexer) == FORMFEED
+          || lex_peek(lexer) == CARRIAGE_RETURN) {
         lex_advance(lexer);
     }
 }
 
 // eliminate comments using DFA transition table form
-void lex_skip_comment(lexer* lexer) {
+void lex_skip_comment(Lexer* lexer) {
     int state, input;
-    state = input = 0;
+    state = input = 0;   
 
     while(1) {
         switch(lex_peek(lexer)) {
@@ -147,7 +156,7 @@ void lex_skip_comment(lexer* lexer) {
                 input = 0;
                 break;
             case EOF:
-            case '\n':
+            case NEWLINE:
             case '\0':
                 input = 1;
                 break;
@@ -167,7 +176,7 @@ void lex_skip_comment(lexer* lexer) {
     }
 }
 
-Token* lex_number(lexer* lexer) {
+Token* lex_number(Lexer* lexer) {
     char* val = (char*) malloc(sizeof(char));
     val[0] = '\0';
     char* s = NULL;
@@ -178,7 +187,11 @@ Token* lex_number(lexer* lexer) {
             input = 0;
         } else if (lex_peek(lexer) == '.') {
             input = 1;
-        } else if (lex_peek(lexer) == ' ' || lex_peek(lexer) == '\t' || lex_peek(lexer) == '\n' || lex_peek(lexer) == EOF) {
+        } else if (lex_peek(lexer) == BLANK 
+                || lex_peek(lexer) == TAB 
+                || lex_peek(lexer) == NEWLINE 
+                || lex_peek(lexer) == EOF
+                || lex_peek(lexer) == '\0') {
             input = 2;
             break;
         } else {
@@ -205,13 +218,13 @@ Token* lex_number(lexer* lexer) {
     }
 }
 
-Token* lex_identifier(lexer* lexer) {
+Token* lex_identifier(Lexer* lexer) {
     char* val = (char*) malloc(sizeof(char));
     val[0] = '\0';
     char* s = NULL;
 
     int state = START_STATE;
-    while(lex_peek(lexer) != EOF) {
+    while(lex_peek(lexer) != BLANK && lex_peek(lexer) != EOF) {
         char c = lex_peek(lexer);
         int input = 0;
         if (isalpha(c) || c == '_') {
@@ -244,16 +257,16 @@ Token* lex_identifier(lexer* lexer) {
         return create_token(TOKEN_CODE, val);
     }
     else if (strcmp(val, "INT") == 0) {
-        return create_token(TOKEN_INT, val);
+        return create_token(TOKEN_TYPE, val);
     }
     else if (strcmp(val, "CHAR") == 0) {
-        return create_token(TOKEN_CHAR, val);
+        return create_token(TOKEN_TYPE, val);
     }
     else if (strcmp(val, "FLOAT") == 0) {
-        return create_token(TOKEN_FLOAT, val);
+        return create_token(TOKEN_TYPE, val);
     }
     else if (strcmp(val, "BOOL") == 0) {
-        return create_token(TOKEN_BOOL, val);
+        return create_token(TOKEN_TYPE, val);
     }
     else if (strcmp(val, "WHILE") == 0) {
         return create_token(TOKEN_WHILE, val);
@@ -276,12 +289,6 @@ Token* lex_identifier(lexer* lexer) {
     else if (strcmp(val, "CASE") == 0) {
         return create_token(TOKEN_CASE, val);
     }
-    else if (strcmp(val, "DISPLAY") == 0) {
-        return create_token(TOKEN_DISPLAY, val);
-    }
-    else if (strcmp(val, "SCAN") == 0) {
-        return create_token(TOKEN_SCAN, val);
-    }
     else if (strcmp(val, "AND") == 0) {
         return create_token(TOKEN_AND, val);
     }
@@ -301,18 +308,15 @@ Token* lex_identifier(lexer* lexer) {
     return create_token(TOKEN_IDENTIFIER, val);
 }
 
-Token* lex_string(lexer* lexer) {
+Token* lex_string(Lexer* lexer) {
     char* val = (char*) malloc(sizeof(char));
     val[0] = '\0';
 
     char* s = NULL;
+    int valid_string = 0;
     if(lex_peek(lexer) == '"'){
-        s = lex_get_char_as_string(lexer);
-        val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
-        strcat(val, s);
         lex_advance(lexer);
-
-        while(lex_peek(lexer) != '"') {
+        while(lex_peek(lexer) != '"' && lex_peek(lexer) != NEWLINE && lex_peek(lexer) != EOF) {
             s = lex_get_char_as_string(lexer);
             val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
             strcat(val, s);
@@ -320,16 +324,14 @@ Token* lex_string(lexer* lexer) {
             lex_advance(lexer);
         }
     }
-
+    
     if(lex_peek(lexer) == '"'){
-        s = lex_get_char_as_string(lexer);
-        val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
-        strcat(val, s);
+        valid_string = 1;
         lex_advance(lexer);
     }
     
-    if(val[0] == '"' && val[strlen(val) - 1] == '"'){
-        if(strcmp(val, "\"TRUE\"") == 0 || strcmp(val, "\"FALSE\"") == 0)
+    if(valid_string){
+        if(strcmp(val, "TRUE") == 0 || strcmp(val, "FALSE") == 0)
             return create_token(TOKEN_BOOLEAN, val);
         return create_token(TOKEN_STRING, val);
     } else {
@@ -338,7 +340,7 @@ Token* lex_string(lexer* lexer) {
     }
 }
 
-Token* lex_character(lexer* lexer) {
+Token* lex_character(Lexer* lexer) {
     char* val = (char*) malloc(sizeof(char));
     val[0] = '\0';
 
@@ -349,7 +351,7 @@ Token* lex_character(lexer* lexer) {
         strcat(val, s);
         lex_advance(lexer);
 
-        while(lex_peek(lexer) != '\'') {
+        while(lex_peek(lexer) != '\'' && lex_peek(lexer) != NEWLINE && lex_peek(lexer) != EOF) {
             s = lex_get_char_as_string(lexer);
             val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
             strcat(val, s);
@@ -364,7 +366,7 @@ Token* lex_character(lexer* lexer) {
         lex_advance(lexer);
     }
     
-    if(strlen(val) == 3)
+    if(val[0] == '\'' && val[strlen(val) - 1] == '\'' && strlen(val) == 3)
         return create_token(TOKEN_CHARACTER, val);
     else {
         lex_error("Unexpected character", lexer->line, lexer->col);
@@ -372,14 +374,36 @@ Token* lex_character(lexer* lexer) {
     }
 }
 
-Token* lex_next_token(lexer* lexer) {
-    while(lexer->current_char != EOF && lexer->pos < lexer->len) {
-        if(lex_peek(lexer) == BLANK || lex_peek(lexer) == TAB || lex_peek(lexer) == NEWLINE)
+Token* lex_newline(Lexer* lexer) {
+    lex_advance(lexer);
+    lex_skip_whitespace(lexer);
+    while(1) {
+        if(lex_peek(lexer) == NEWLINE) {
+            lex_advance(lexer);
             lex_skip_whitespace(lexer);
-        if(lex_peek(lexer) == EOF)
+        }
+        else
+            break;
+    }
+    if (lex_peek(lexer) == '#') {
+        lex_skip_comment(lexer);    
+        lex_advance(lexer);
+    }
+    return create_token(TOKEN_NEWLINE, NULL);
+}
+
+Token* lex_next_token(Lexer* lexer) {
+    while(lexer->current_char != EOF && lexer->pos < lexer->len) {
+        lex_skip_whitespace(lexer);
+        if(lex_peek(lexer) == NEWLINE) {
+            lexer->line++;
+            return lex_newline(lexer);
+        } 
+        else if(lex_peek(lexer) == EOF)
             return create_token(TOKEN_EOF, NULL);
-        else if(lex_peek(lexer) == '#')
+        else if(lex_peek(lexer) == '#') {
             lex_skip_comment(lexer);
+        }
         else if (lex_peek(lexer) == '"')
             return lex_string(lexer);
         else if (lex_peek (lexer) == '\'')
@@ -460,7 +484,7 @@ Token* lex_next_token(lexer* lexer) {
     return create_token(TOKEN_EOF, NULL);
 }
 
-void lexer_free(lexer* lexer) {
+void lexer_free(Lexer* lexer) {
     free(lexer);
 }
 

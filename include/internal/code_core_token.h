@@ -42,10 +42,6 @@ enum TokenType {
     TOKEN_BEGIN,        // 29
     TOKEN_CODE,         // 30
     TOKEN_END,          // 31
-    TOKEN_INT,          // 32
-    TOKEN_CHAR,         // 33
-    TOKEN_FLOAT,
-    TOKEN_BOOL,         // 34
     TOKEN_SCAN,         // 35
     TOKEN_DISPLAY,      // 36
     TOKEN_IF,           // 37
@@ -59,7 +55,7 @@ enum TokenType {
     TOKEN_FUNC,
     TOKEN_RETURN,
 
-    // literals
+    TOKEN_TYPE,
     TOKEN_IDENTIFIER,   // 40
     TOKEN_NUMBER,       // 42
     TOKEN_FNUMBER,
