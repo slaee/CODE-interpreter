@@ -7,10 +7,10 @@
 
 char* buffer = NULL;
 
-#define READ_FILE(path, size)                           \
+#define READ_FILE(path)                                 \
     {                                                   \
-        buffer = (char*)malloc(size);                   \
-        FILE *fp = fopen(path, "r");                    \
+        buffer = (char*)malloc(BUFFER_SIZE);            \
+        FILE *fp = fopen(path, "rb");                   \
         if (fp == NULL) {                               \
             printf("Error opening file\n");             \
             exit(1);                                    \
@@ -18,14 +18,14 @@ char* buffer = NULL;
         fseek(fp, 0, SEEK_END);                         \
         long file_size = ftell(fp);                     \
         fseek(fp, 0, SEEK_SET);                         \
-        if(file_size > size)                            \
+        if(file_size > BUFFER_SIZE)                     \
             buffer = (char*)realloc(buffer, file_size); \
         if (buffer == NULL) {                           \
             printf("Error allocating memory\n");        \
             exit(1);                                    \
         }                                               \
-        fread(buffer, file_size, 1, fp);                \
-        buffer[file_size] = EOF;                        \
+        fread(buffer, 1, file_size, fp);                \
+        fclose(fp);                                     \
     }
 
 #define FREE_BUFFER()                                   \
