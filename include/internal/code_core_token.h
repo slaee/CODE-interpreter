@@ -2,51 +2,49 @@
 #define _CODE_CORE_TOKEN_H_
 
 enum TokenType {
-    TOKEN_EOF,          // 0
+    TOKEN_EOF,
     TOKEN_NEWLINE,
 
     // operators
-    TOKEN_PLUS,         // 1
-    TOKEN_MINUS,        // 2
-    TOKEN_STAR,         // 3
-    TOKEN_SLASH,        // 4
-    TOKEN_PERCENT,      // 5
-    TOKEN_DOLLAR,       // 6
-    TOKEN_AMPERSAND,    // 7
-    TOKEN_COLON,        // 8
-    TOKEN_COMMA,        // 9
-    TOKEN_LPAREN,       // 10
-    TOKEN_RPAREN,       // 11
-    TOKEN_LBRACKET,     // 12
-    TOKEN_RBRACKET,     // 13
-    TOKEN_GREATERTHAN,  // 14
-    TOKEN_LESSTHAN,     // 15
+    TOKEN_PLUS,
+    TOKEN_MINUS,
+    TOKEN_STAR,
+    TOKEN_SLASH,
+    TOKEN_PERCENT,
+    TOKEN_DOLLAR,
+    TOKEN_AMPERSAND,
+    TOKEN_COLON,
+    TOKEN_COMMA,
+    TOKEN_LPAREN,
+    TOKEN_RPAREN,
+    TOKEN_LBRACKET,
+    TOKEN_RBRACKET,
+    TOKEN_GREATERTHAN,
+    TOKEN_LESSTHAN,
     TOKEN_EQUAL,
-    TOKEN_EQEQUAL,      // 16
-    TOKEN_LESSEQUAL,    // 17
-    TOKEN_GREATEREQUAL, // 18
-    TOKEN_NOTEQUAL,     // 19
-    TOKEN_PLUSPLUS,     // 20
-    TOKEN_MINUSMINUS,   // 21
-    TOKEN_PLUSEQUAL,    // 22
-    TOKEN_MINUSEQUAL,   // 23
-    TOKEN_STAREQUAL,    // 24
-    TOKEN_SLASHEQUAL,   // 25
+    TOKEN_EQEQUAL,
+    TOKEN_LESSEQUAL,
+    TOKEN_GREATEREQUAL,
+    TOKEN_NOTEQUAL,
+    TOKEN_PLUSPLUS,
+    TOKEN_MINUSMINUS,
+    TOKEN_PLUSEQUAL,
+    TOKEN_MINUSEQUAL,
+    TOKEN_STAREQUAL,
+    TOKEN_SLASHEQUAL,
 
     // logical operators
-    TOKEN_OR,           // 26
-    TOKEN_AND,          // 27
-    TOKEN_NOT,          // 28
+    TOKEN_OR,
+    TOKEN_AND,
+    TOKEN_NOT,
     
     // Reserved words
-    TOKEN_BEGIN,        // 29
-    TOKEN_CODE,         // 30
-    TOKEN_END,          // 31
-    TOKEN_SCAN,         // 35
-    TOKEN_DISPLAY,      // 36
-    TOKEN_IF,           // 37
-    TOKEN_ELSE,         // 38
-    TOKEN_WHILE,        // 39
+    TOKEN_BEGIN,
+    TOKEN_CODE,
+    TOKEN_END,
+    TOKEN_IF,
+    TOKEN_ELSE,
+    TOKEN_WHILE,
     TOKEN_DO,
     TOKEN_FOR,
     TOKEN_SWITCH,
@@ -56,13 +54,13 @@ enum TokenType {
     TOKEN_RETURN,
 
     TOKEN_TYPE,
-    TOKEN_IDENTIFIER,   // 40
-    TOKEN_NUMBER,       // 42
+    TOKEN_IDENTIFIER,
+    TOKEN_NUMBER,
     TOKEN_FNUMBER,
-    TOKEN_STRING,       // 44
-    TOKEN_BOOLEAN,      // 45
-    TOKEN_CHARACTER,    // 46
-    TOKEN_COMMENT,      // 47
+    TOKEN_STRING,
+    TOKEN_BOOLEAN,
+    TOKEN_CHARACTER,
+    TOKEN_COMMENT,
 };
 
 typedef struct token {
