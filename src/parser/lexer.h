@@ -10,15 +10,15 @@ typedef struct lexer {
     int line;
     int col;
     int current_char;
-} lexer;
+} Lexer;
 
-lexer* init_code_lexer(char* source, int len);
-int lex_peek(lexer* lexer);
-int lex_advance(lexer* lexer);
-Token* lex_next_token(lexer* lexer);
+Lexer* init_code_lexer(char* source, int len);
+int lex_peek(Lexer* lexer);
+int lex_advance(Lexer* lexer);
+Token* lex_next_token(Lexer* lexer);
 
 void lex_error(const char* msg, int line, int col);
-void lexer_free(lexer* lexer);
+void lexer_free(Lexer* lexer);
 
 void print_token(Token* token);
 
