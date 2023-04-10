@@ -1,0 +1,6 @@
+BEGIN CODE
+    BOOL b = "FALSE"
+    BOOL a = "TRUE"  
+    # diplay here 
+    DISPLAY: a, b
+END CODE
