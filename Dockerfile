@@ -1,6 +1,6 @@
 FROM gcc:latest
 
-WORKDIR /src
+WORKDIR /app
 
 COPY . .
 
