@@ -83,6 +83,7 @@ const char* tokentype_str_value[] = {
     [TOKEN_EQUAL]       = "=",
     [TOKEN_PLUSPLUS]    = "++",
     [TOKEN_MINUSMINUS]  = "--",
+    [TOKEN_EQEQUAL]     = "==",
     [TOKEN_NOTEQUAL]    = "<>",
     [TOKEN_GREATEREQUAL]= ">=",
     [TOKEN_LESSEQUAL]   = "<=",
@@ -388,6 +389,8 @@ Token* lex_newline(Lexer* lexer) {
     lex_skip_whitespace(lexer);
     while(1) {
         if(lex_peek(lexer) == NEWLINE) {
+            lexer->col = 1;
+            lexer->line++;
             lex_advance(lexer);
             lex_skip_whitespace(lexer);
         }
@@ -454,12 +457,14 @@ Token* lex_next_token(Lexer* lexer) {
                     }
                 case '=':
                     if(lex_advance(lexer) == '=') {
+                        lex_advance(lexer);
                         return create_token(TOKEN_EQEQUAL, NULL);
                     } else {
                         return create_token(TOKEN_EQUAL, NULL);
                     }
                 case '>':
                     if(lex_advance(lexer) == '=') {
+                        lex_advance(lexer);
                         return create_token(TOKEN_GREATEREQUAL, NULL);
                     } else {
                         return create_token(TOKEN_GREATERTHAN, NULL);
