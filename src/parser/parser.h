@@ -37,7 +37,6 @@ void parser_expect_token(Parser* parser, enum TokenType type);
 
 // AST* code_parse_identifier(Parser* parser);
 
-
 AST* parse_code(Parser* parser);
 
 AST* code_parse_statements(Parser* parser);
@@ -72,9 +71,11 @@ AST* code_parse_args_prime(Parser* parser);
 
 AST* code_parse_arg(Parser* parser);
 
-AST* code_parse_string_val(Parser* parser);
+AST* code_parse_string_val_expression(Parser* parser);
 
-AST* code_parse_string_val_prime(Parser* parser);
+AST* code_parse_string_val_expression_prime(Parser* parser);
+
+AST* code_parse_constants(Parser* parser);
 
 AST* code_parse_string(Parser* parser);
 
@@ -94,11 +95,17 @@ AST* code_parse_boolean_expression(Parser* parser);
 
 AST* code_parse_boolean_expression_prime(Parser* parser);
 
-AST* code_parse_bool_term(Parser* parser);
+AST* code_parse_boolean_factor(Parser* parser);
 
 AST* code_parse_case_statements(Parser* parser);
 
 AST* code_parse_case_statement(Parser* parser);
+
+AST* code_parse_case(Parser* parser);
+
+AST* code_parse_default(Parser* parser);
+
+AST* code_parse_case_factor(Parser* parser);
 
 AST* code_parse_if_statement(Parser* parser);
 

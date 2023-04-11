@@ -1,5 +1,4 @@
 BEGIN CODE
-    BOOL b = "TRUE"
-    BOOL a = "TRUE"  
+    INT b, a, b = 1
     # diplay here 
 END CODE

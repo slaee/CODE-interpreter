@@ -49,6 +49,8 @@ enum TokenType {
     TOKEN_FOR,
     TOKEN_SWITCH,
     TOKEN_CASE,
+    TOKEN_DEFAULT,
+    TOKEN_BREAK,
     TOKEN_CONTINUE,
     TOKEN_FUNC,
     TOKEN_RETURN,

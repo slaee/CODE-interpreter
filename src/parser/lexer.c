@@ -50,6 +50,8 @@ const char* tokentype_str_value[] = {
     [TOKEN_FOR]         = "FOR",
     [TOKEN_SWITCH]      = "SWITCH",
     [TOKEN_CASE]        = "CASE",
+    [TOKEN_DEFAULT]     = "DEFAULT",
+    [TOKEN_BREAK]       = "BREAK",
     [TOKEN_OR]          = "OR",
     [TOKEN_AND]         = "AND",
     [TOKEN_NOT]         = "NOT",
@@ -79,6 +81,7 @@ const char* tokentype_str_value[] = {
     [TOKEN_LBRACKET]    = "[",
     [TOKEN_RBRACKET]    = "]",
     [TOKEN_EQUAL]       = "=",
+    [TOKEN_PLUSPLUS]    = "++",
     [TOKEN_MINUSMINUS]  = "--",
     [TOKEN_NOTEQUAL]    = "<>",
     [TOKEN_GREATEREQUAL]= ">=",
@@ -289,6 +292,12 @@ Token* lex_identifier(Lexer* lexer) {
     else if (strcmp(val, "CASE") == 0) {
         return create_token(TOKEN_CASE, val);
     }
+    else if (strcmp(val, "DEFAULT") == 0) {
+        return create_token(TOKEN_DEFAULT, val);
+    }
+    else if (strcmp(val, "BREAK") == 0) {
+        return create_token(TOKEN_BREAK, val);
+    }
     else if (strcmp(val, "AND") == 0) {
         return create_token(TOKEN_AND, val);
     }
@@ -396,6 +405,7 @@ Token* lex_next_token(Lexer* lexer) {
     while(lexer->current_char != EOF && lexer->pos < lexer->len) {
         lex_skip_whitespace(lexer);
         if(lex_peek(lexer) == NEWLINE) {
+            lexer->col = 1;
             lexer->line++;
             return lex_newline(lexer);
         } 
