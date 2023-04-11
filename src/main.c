@@ -15,8 +15,8 @@ int main() {
     Lexer* lex = init_code_lexer(buffer, strlen(buffer));
     Parser* parser = init_code_parser(lex);
     AST* root = parse_code(parser);
-    Visitor* visitor = init_code_visitor();
-    visitor_visit(visitor, root);
+    // Visitor* visitor = init_code_visitor();
+    // visitor_visit(visitor, root);
 
     // Token* token;
     // while((token = lex_next_token(lex)) && (token->type != TOKEN_EOF)) {
