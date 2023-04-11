@@ -1,0 +1,435 @@
+BEGIN CODE
+INT xyz, abc=100
+xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [[] & xyz & []]
+END CODE
+
+BEGIN CODE
+INT xyz = 1, abc=100
+# xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [[] & xyz & []]
+END CODE
+
+# asdasdasd
+BEGIN CODE
+INT xyz = 1, abc=100
+# xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [[] & xyz & []]
+END CODE
+
+# asdasdasd
+BEGIN CODE
+INT xyz = 1, abc=100
+FLOAT f = 5.1
+# xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [[] & xyz & f & []]
+END CODE
+
+# asdasdasd
+BEGIN 
+INT xyz = 1, abc=100
+FLOAT f = 5.1
+# xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [[] & xyz & f & []]
+END CODE
+
+# asdasdasd
+BEGIN CODE
+END CODE
+
+# asdasdasd
+BEGIN CODE
+END CODE
+BEGIN CODE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b AND c <>200)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b AND c <>200)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b AND c <> 200)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+d = (a < b AND c <> 200)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="FALSE"
+d = (a < b AND c <>200)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+d = (a < b AND c == 200)
+DISPLAY: d
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a + 1 == 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a == 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a = 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a == 101)
+	DISPLAY: a
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a == 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+ELSE
+BEGIN IF
+	DISPLAY: b
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a == 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+ELSE IF (b == 200)
+BEGIN IF
+	DISPLAY: b
+END IF
+ELSE
+BEGIN IF
+	DISPLAY: c
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a == 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+ELSE IF (b == 201)
+BEGIN IF
+	DISPLAY: b
+END IF
+ELSE
+BEGIN IF
+	DISPLAY: c
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a == 100)
+BEGIN IF
+	DISPLAY: a
+END IF
+ELSE IF (b == 201)
+BEGIN IF
+	DISPLAY: b
+END IF
+ELSE
+BEGIN IF
+	DISPLAY: c
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=0 
+BOOL d="TRUE"
+IF (a == 100)
+BEGIN IF
+	WHILE (x < 5)
+	BEGIN WHILE
+		DISPLAY: x & $
+		x=x+1
+	END WHILE
+END IF
+ELSE IF (b == 201)
+BEGIN IF
+	DISPLAY: b
+END IF
+ELSE
+BEGIN IF
+	DISPLAY: c
+END IF
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=0 
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	IF (x % 2 == 0)
+	BEGIN IF
+		DISPLAY: x
+	END IF
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=0 
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	IF (x % 2 == 0)
+	BEGIN IF
+		DISPLAY: x
+		x=x+1
+	END IF
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=0 
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	IF (x % 2 == 0)
+	BEGIN IF
+		DISPLAY: x
+	END IF
+	x=x+1
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=0 
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	IF (x % 2 <> 0)
+	BEGIN IF
+		DISPLAY: x
+	END IF
+	x=x+1
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=1, y
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	y = 1
+	WHILE (y <= 5)
+	BEGIN WHILE
+		DISPLAY: x & " * " & y & " = " & x*y
+		y = y + 1
+	END WHILE
+	x = x + 1
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=1, y
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	y = 1
+	WHILE (y <= 5)
+	BEGIN WHILE
+		DISPLAY: x & " * " & y & " = " & x*y & $
+		y = y + 1
+	END WHILE
+	x = x + 1
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x=1, y
+BOOL d="TRUE"
+WHILE (x < 5)
+BEGIN WHILE
+	y = 1
+	WHILE (y <= 5)
+	BEGIN WHILE
+		DISPLAY: x & " * " & y & " = " & x*y & $
+		y = y + 1
+	END WHILE
+	x = x + 1
+	DISPLAY: $
+END WHILE
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x, y
+DISPLAY: "Enter x: "
+SCAN: x
+DISPLAY: &
+FOR (y = 0, y < x, y = y+1)
+BEGIN FOR
+	IF (y % 2 == 0)
+	BEGIN IF
+		DISPLAY: y & $
+	END IF
+END FOR
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x, y
+DISPLAY: "Enter x: "
+SCAN: x
+DISPLAY: $
+FOR (y = 0, y < x, y = y+1)
+BEGIN FOR
+	IF (y % 2 == 0)
+	BEGIN IF
+		DISPLAY: y & $
+	END IF
+END FOR
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x, y
+DISPLAY: "Enter x: "
+SCAN: x
+FOR (y = 0, y <= x, y = y+1)
+BEGIN FOR
+	IF (y % 2 == 0)
+	BEGIN IF
+		DISPLAY: y & $
+	END IF
+END FOR
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x, y
+DISPLAY: "Enter x: "
+SCAN: x
+FOR (y = 0, y <= x, y = y+1)
+BEGIN FOR
+	IF (y % 2 == 0)
+	BEGIN IF
+		DISPLAY: y & $
+	END IF
+END FOR
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x, y
+DISPLAY: "Enter x: "
+SCAN: x
+FOR (y = 0, y <= x, y = y+1)
+BEGIN FOR
+	DISPLAY: y & $
+END FOR
+END CODE
+
+BEGIN CODE
+INT a=100, b=200, c=300, x, y, z
+DISPLAY: "Enter x: "
+SCAN: x
+FOR (y = 1, y <= x, y = y+1)
+BEGIN FOR
+	z = 1
+	WHILE (z < y)
+	BEGIN WHILE
+		DISPLAY: z
+		z = z + 1
+	END WHILE
+	DISPLAY: $
+END FOR
+END CODE
+
+BEGIN CODE
+INT xyz, abc=100
+xyz= ((abc *5)/10 + 10) * -1
+DISPLAY: [&] & xyz & [&]
+END CODE
+
+INT add: a, break
+BEGIN FUNC
+
+END FUNC

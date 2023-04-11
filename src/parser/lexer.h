@@ -9,17 +9,17 @@ typedef struct lexer {
     int pos;
     int line;
     int col;
-    int next_char;
-} lexer;
+    int current_char;
+} Lexer;
 
-lexer* Lexer(char* source, int len);
-void lexer_free(lexer* lexer);
+Lexer* init_code_lexer(char* source, int len);
+int lex_peek(Lexer* lexer);
+int lex_advance(Lexer* lexer);
+Token* lex_next_token(Lexer* lexer);
 
-int peek(lexer* lexer);
-int advance(lexer* lexer);
-TokenStream* tokenize(lexer* lexer);
-Token* scan(lexer* lexer);
+void lex_error(const char* msg, int line, int col);
+void lexer_free(Lexer* lexer);
 
-void error(const char* msg, int line, int col);
+void print_token(Token* token);
 
 #endif

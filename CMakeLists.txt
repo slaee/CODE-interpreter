@@ -10,12 +10,18 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     code-interpreter
     src/main.c
     src/parser/lexer.c
+    src/parser/parser.c
+    src/parser/ast.c
+    src/code/visitor.c
   )
 elseif(CMAKE_BUILD_TYPE MATCHES Test)
   add_executable(
     code-interpreter
     test/test.c
     src/parser/lexer.c
+    src/parser/parser.c
+    src/parser/ast.c
+    src/code/visitor.c
   )
 endif()
 
