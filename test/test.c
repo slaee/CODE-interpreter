@@ -124,6 +124,7 @@ int main() {
                 READ_FILE("test/test3.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
                 BEGIN_TEST(LEXER_TEST_3)
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -166,6 +167,7 @@ int main() {
                 READ_FILE("test/test4.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
                 BEGIN_TEST(LEXER_TEST_4)
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -181,7 +183,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_FNUMBER);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_COLON);
@@ -215,6 +217,7 @@ int main() {
                 READ_FILE("test/test5.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
                 BEGIN_TEST(LEXER_TEST_5)
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
@@ -229,7 +232,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_FNUMBER);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_COLON);
@@ -263,6 +266,7 @@ int main() {
                 READ_FILE("test/test6.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
                 BEGIN_TEST(LEXER_TEST_6)
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -284,6 +288,7 @@ int main() {
                 READ_FILE("test/test7.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
                 BEGIN_TEST(LEXER_TEST_7)
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -330,7 +335,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -340,8 +345,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_AND);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_GREATERTHAN);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NOTEQUAL);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -386,7 +390,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -396,8 +400,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_AND);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_GREATERTHAN);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NOTEQUAL);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -442,7 +445,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -452,8 +455,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_AND);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_GREATERTHAN);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NOTEQUAL);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -498,7 +500,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -508,8 +510,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_AND);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_GREATERTHAN);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NOTEQUAL);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -554,7 +555,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -605,7 +606,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -656,7 +657,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -707,7 +708,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -758,7 +759,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -809,7 +810,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -860,7 +861,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
@@ -870,8 +871,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_AND);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_GREATERTHAN);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NOTEQUAL);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -917,7 +917,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -975,7 +975,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1031,7 +1031,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1087,7 +1087,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1137,7 +1137,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1205,7 +1205,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1291,7 +1291,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1377,7 +1377,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1467,7 +1467,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IF);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1578,7 +1578,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1653,7 +1653,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1734,7 +1734,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1815,7 +1815,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -1832,8 +1832,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_PERCENT);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_GREATERTHAN);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_NOTEQUAL);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -1899,7 +1898,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -2000,7 +1999,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -2197,7 +2196,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_BOOLEAN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_WHILE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
@@ -2572,6 +2571,8 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_COMMA);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_COMMA);
+                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
                     assert_ne(lex_next_token(lex)->type == TOKEN_COLON);
@@ -2712,7 +2713,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_END);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
-                END_TEST(LEXER_TEST_41)
+                END_TEST(LEXER_TEST_40)
 
                 // sample for PARSER test
                 /**

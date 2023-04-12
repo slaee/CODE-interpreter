@@ -129,6 +129,12 @@ int lex_advance(Lexer* lexer) {
     return lexer->current_char;
 }
 
+int lex_unget(Lexer* lexer) {
+    lexer->pos--;
+    lexer->col--;
+    lexer->current_char = lexer->source[lexer->pos];
+    return lexer->current_char;
+}
 
 int lex_lookahead(Lexer* lexer) {
     if (lexer->pos + 1 < lexer->len) {
@@ -158,6 +164,10 @@ void lex_skip_whitespace(Lexer* lexer) {
 void lex_skip_comment(Lexer* lexer) {
     int state, input;
     state = input = 0;
+
+    int flag_skip = 0;
+    if(lex_lookback(lexer) == NEWLINE)
+        flag_skip = 1;
 
     while(1) {
         switch(lex_peek(lexer)) {
