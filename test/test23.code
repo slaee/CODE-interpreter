@@ -1,5 +1,5 @@
 BEGIN CODE
-INT a=100, b=200, c=300 
+INT a=100, b=200, c=300
 BOOL d="TRUE"
 IF (a == 101)
 	DISPLAY: a
