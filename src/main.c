@@ -1,44 +1,28 @@
 #include <stdio.h>
 #include <string.h>
-#include "../parser/tokenizer.h"
+#include <stdlib.h>
+#include "io.h"
+#include "parser/lexer.h"
+#include "parser/parser.h"
+#include "code/visitor.h"
+
 
 int main() {
+    extern char* buffer;
+    READ_FILE("test/main.code");
 
-    /**
-     * Basic testing phase
-     */
-    Interpreter interp;
+    // create lexer
+    Lexer* lex = init_code_lexer(buffer, strlen(buffer));
+    Parser* parser = init_code_parser(lex);
+    AST* root = parse_code(parser);
+    // Visitor* visitor = init_code_visitor();
+    // visitor_visit(visitor, root);
 
-    interp.input = "INT a = 5";
-    interp.input_size = strlen(interp.input);
-    interp.pos = 0;
-    interp.line = 1;
-
-    // removed white spaces so the interpreter input will be converted as 
-    // INTa=5;
-    // but this is not the case, we need to split into words as well to become a token
-    //skip_whitespace(&interp);
-    read_identifier(&interp);
-    // 35 = IDENTIFIER
-    printf("TOKENIZED: %d \'%s\' %d %d %d\n" , interp.current_token.type, interp.current_token.lexeme, interp.pos, interp.line, interp.input_size);
-
-    interp.pos = 4;
-    interp.line = 1;
-    read_identifier(&interp);
-    // 35 = IDENTIFIER
-    printf("TOKENIZED: %d \'%s\' %d %d %d\n" , interp.current_token.type, interp.current_token.lexeme, interp.pos, interp.line, interp.input_size);
-
-    interp.pos = 6;
-    interp.line = 1;
-    next_token(&interp);
-    // 13 = EQUAL (Assign operation)
-    printf("TOKENIZED: %d \'%s\' %d %d %d\n" , interp.current_token.type, interp.current_token.lexeme, interp.pos, interp.line, interp.input_size);
-
-    interp.pos = 8;
-    interp.line = 1;
-    read_number(&interp);
-    // 35 = IDENTIFIER
-    printf("TOKENIZED: %d \'%s\' %d %d %d\n" , interp.current_token.type, interp.current_token.lexeme, interp.pos, interp.line, interp.input_size);
+    // Token* token;
+    // while((token = lex_next_token(lex)) && (token->type != TOKEN_EOF)) {
+    //    print_token(token);
+    // }
+    
 
     return 0;
 }

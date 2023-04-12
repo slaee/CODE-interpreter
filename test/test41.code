@@ -1,0 +1,15 @@
+BEGIN CODE
+INT a=100, b=200, c=300, x, y, z
+DISPLAY: "Enter x: "
+SCAN: x
+FOR (y = 1, y <= x, y = y+1)
+BEGIN FOR
+	z = 1
+	WHILE (z < y)
+	BEGIN WHILE
+		DISPLAY: z
+		z = z + 1
+	END WHILE
+	DISPLAY: $
+END FOR
+END CODE

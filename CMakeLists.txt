@@ -1,11 +1,55 @@
 cmake_minimum_required(VERSION 3.0)
 project(code-interpreter)
 
-set(CMAKE_BUILD_TYPE Debug)
+include_directories(./include/internal)
+include_directories(./include/utils)
 
-add_executable(
+# Set source files based on environment
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  add_executable(
     code-interpreter
     src/main.c
-    parser/token.c
-    parser/tokenizer.c
-)
+    src/parser/lexer.c
+    src/parser/parser.c
+    src/parser/ast.c
+    src/code/visitor.c
+  )
+elseif(CMAKE_BUILD_TYPE MATCHES Test)
+  add_executable(
+    code-interpreter
+    test/test.c
+    src/parser/lexer.c
+    src/parser/parser.c
+    src/parser/ast.c
+    src/code/visitor.c
+  )
+endif()
+
+# Set default build type to Debug
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# Add custom build type Test
+if(NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_CONFIGURATION_TYPES "Debug;Release;Test" CACHE STRING "" FORCE)
+endif()
+
+# Set compiler flags for Test build
+# if(CMAKE_BUILD_TYPE MATCHES Test)
+#   set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -Werror")
+# endif()
+
+# for debugging
+# add_executable(
+#     code-interpreter
+#     src/main.c
+#     src/parser/lexer.c
+# )
+
+# for testing
+# add_executable(
+#     code-interpreter
+#     test/test.c
+#     src/parser/lexer.c
+# )

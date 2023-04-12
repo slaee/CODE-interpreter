@@ -1,0 +1,72 @@
+#ifndef _CODE_CORE_TOKEN_H_
+#define _CODE_CORE_TOKEN_H_
+
+enum TokenType {
+    TOKEN_EOF,
+    TOKEN_NEWLINE,
+
+    // operators
+    TOKEN_PLUS,
+    TOKEN_MINUS,
+    TOKEN_STAR,
+    TOKEN_SLASH,
+    TOKEN_PERCENT,
+    TOKEN_DOLLAR,
+    TOKEN_AMPERSAND,
+    TOKEN_COLON,
+    TOKEN_COMMA,
+    TOKEN_LPAREN,
+    TOKEN_RPAREN,
+    TOKEN_LBRACKET,
+    TOKEN_RBRACKET,
+    TOKEN_GREATERTHAN,
+    TOKEN_LESSTHAN,
+    TOKEN_EQUAL,
+    TOKEN_EQEQUAL,
+    TOKEN_LESSEQUAL,
+    TOKEN_GREATEREQUAL,
+    TOKEN_NOTEQUAL,
+    TOKEN_PLUSPLUS,
+    TOKEN_MINUSMINUS,
+    TOKEN_PLUSEQUAL,
+    TOKEN_MINUSEQUAL,
+    TOKEN_STAREQUAL,
+    TOKEN_SLASHEQUAL,
+
+    // logical operators
+    TOKEN_OR,
+    TOKEN_AND,
+    TOKEN_NOT,
+    
+    // Reserved words
+    TOKEN_BEGIN,
+    TOKEN_CODE,
+    TOKEN_END,
+    TOKEN_IF,
+    TOKEN_ELSE,
+    TOKEN_WHILE,
+    TOKEN_DO,
+    TOKEN_FOR,
+    TOKEN_SWITCH,
+    TOKEN_CASE,
+    TOKEN_DEFAULT,
+    TOKEN_BREAK,
+    TOKEN_CONTINUE,
+    TOKEN_FUNC,
+    TOKEN_RETURN,
+
+    TOKEN_TYPE,
+    TOKEN_IDENTIFIER,
+    TOKEN_NUMBER,
+    TOKEN_FNUMBER,
+    TOKEN_STRING,
+    TOKEN_BOOLEAN,
+    TOKEN_CHARACTER,
+    TOKEN_COMMENT,
+};
+
+typedef struct token {
+    enum TokenType type;
+    char* value;
+} Token;
+#endif

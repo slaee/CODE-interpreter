@@ -1,0 +1,8 @@
+BEGIN CODE
+INT a=100, b=200, c=300 
+BOOL d="TRUE"
+IF (a + 1 == 101)
+BEGIN IF
+	DISPLAY: a
+END IF
+END CODE

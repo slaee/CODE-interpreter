@@ -1,0 +1,4 @@
+BEGIN CODE
+    INT b, a, b = 1
+    # diplay here 
+END CODE
