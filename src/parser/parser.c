@@ -80,6 +80,12 @@ AST* code_parse_statement(Parser* parser) {
         case TOKEN_SWITCH:
             code_parse_switch_case(parser);
             break;
+        case TOKEN_IF:
+            code_parse_if_statement(parser);
+            break;
+        case TOKEN_WHILE:
+            code_parse_while_loop(parser);
+            break;
     }
 }
 
@@ -471,6 +477,9 @@ AST* code_parse_boolean_factor(Parser* parser){
         case TOKEN_IDENTIFIER:
             parser_expect_token(parser, TOKEN_IDENTIFIER);
             break;
+        case TOKEN_NUMBER:
+            parser_expect_token(parser, TOKEN_NUMBER);
+            break;
         case TOKEN_LPAREN:
             code_parse_paren(parser);
             break;
@@ -534,11 +543,32 @@ AST* code_parse_case_factor(Parser* parser) {
 }
 
 AST* code_parse_if_statement(Parser* parser){
-    
+    parser_expect_token(parser, TOKEN_IF);
+    parser_expect_token(parser, TOKEN_LPAREN);
+    code_parse_expression(parser);
+    parser_expect_token(parser, TOKEN_RPAREN);
+    parser_expect_token(parser, TOKEN_NEWLINE);
+    parser_expect_token(parser, TOKEN_BEGIN);
+    parser_expect_token(parser, TOKEN_IF);
+    parser_expect_token(parser, TOKEN_NEWLINE);
+    code_parse_statements(parser);
+    parser_expect_token(parser, TOKEN_END);
+    parser_expect_token(parser, TOKEN_IF);
+    parser_expect_token(parser, TOKEN_NEWLINE);
+    code_parse_else_if_statements(parser);
 }
 
 AST* code_parse_else_if_statements(Parser* parser){
-    
+    code_parse_else_if_statement(parser);
+    while(token_peek(parser) == TOKEN_ELSE) {
+        parser_expect_token(parser, TOKEN_ELSE);
+        if(token_peek(parser) == TOKEN_IF) {
+            code_parse_if_statement(parser);
+        } else {
+            code_parse_else_statement(parser);
+            break;
+        }
+    }
 }
 
 AST* code_parse_else_if_statement(Parser* parser){
@@ -546,11 +576,31 @@ AST* code_parse_else_if_statement(Parser* parser){
 }
 
 AST* code_parse_else_statement(Parser* parser){
-    
+    if(parser->previous_token->type == TOKEN_ELSE) {
+        parser_expect_token(parser, TOKEN_NEWLINE);
+        parser_expect_token(parser, TOKEN_BEGIN);
+        parser_expect_token(parser, TOKEN_IF);
+        parser_expect_token(parser, TOKEN_NEWLINE);
+        code_parse_statements(parser);
+        parser_expect_token(parser, TOKEN_END);
+        parser_expect_token(parser, TOKEN_IF);
+        parser_expect_token(parser, TOKEN_NEWLINE);
+    }
 }
 
 AST* code_parse_while_loop(Parser* parser){
-    
+    parser_expect_token(parser, TOKEN_WHILE);
+    parser_expect_token(parser, TOKEN_LPAREN);
+    code_parse_expression(parser);
+    parser_expect_token(parser, TOKEN_RPAREN);
+    parser_expect_token(parser, TOKEN_NEWLINE);
+    parser_expect_token(parser, TOKEN_BEGIN);
+    parser_expect_token(parser, TOKEN_WHILE);
+    parser_expect_token(parser, TOKEN_NEWLINE);
+    code_parse_statements(parser);
+    parser_expect_token(parser, TOKEN_END);
+    parser_expect_token(parser, TOKEN_WHILE);
+    parser_expect_token(parser, TOKEN_NEWLINE);
 }
 
 AST* code_parse_for_loop(Parser* parser){

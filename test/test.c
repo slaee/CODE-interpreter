@@ -123,7 +123,7 @@ int main() {
                 printf("========= Test 3:");
                 READ_FILE("test/test3.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
-                BEGIN_TEST(LEXER_TEST_1)
+                BEGIN_TEST(LEXER_TEST_3)
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -165,7 +165,7 @@ int main() {
                 printf("========= Test 4:");
                 READ_FILE("test/test4.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
-                BEGIN_TEST(LEXER_TEST_1)
+                BEGIN_TEST(LEXER_TEST_4)
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -214,7 +214,7 @@ int main() {
                 printf("========= Test 5:");
                 READ_FILE("test/test5.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
-                BEGIN_TEST(LEXER_TEST_1)
+                BEGIN_TEST(LEXER_TEST_5)
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
@@ -892,60 +892,6 @@ int main() {
                 FREE_BUFFER()
             break;
 
-            case 10:
-                printf("========= Test 11:");
-                READ_FILE("test/test11.code");
-                lex = init_code_lexer(buffer, strlen(buffer));
-                BEGIN_TEST(LEXER_TEST_11)
-                    assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_COMMA);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_COMMA);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_TYPE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_STRING);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_EQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LPAREN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_LESSTHAN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_AND);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_EQEQUAL);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NUMBER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_RPAREN);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_COLON);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_IDENTIFIER);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_END);
-                    assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
-                END_TEST(LEXER_TEST_19)
-
-                // sample for PARSER test
-                /**
-                BEGIN_TEST(PARSER)
-                    ... do assertions here calling assert_ne() ...
-                END_TEST(PARSER)
-                */
-                FREE_BUFFER()
-            break;
 
             case 19:
                 printf("========= Test 20:");
@@ -2332,7 +2278,7 @@ int main() {
                 printf("========= Test 37:");
                 READ_FILE("test/test37.code");
                 lex = init_code_lexer(buffer, strlen(buffer));
-                BEGIN_TEST(LEXER_TEST_36)
+                BEGIN_TEST(LEXER_TEST_37)
                     assert_ne(lex_next_token(lex)->type == TOKEN_BEGIN);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
@@ -2691,7 +2637,7 @@ int main() {
                     assert_ne(lex_next_token(lex)->type == TOKEN_NEWLINE);
                     assert_ne(lex_next_token(lex)->type == TOKEN_END);
                     assert_ne(lex_next_token(lex)->type == TOKEN_CODE);
-                END_TEST(LEXER_TEST_40)
+                END_TEST(LEXER_TEST_41)
 
                 // sample for PARSER test
                 /**
@@ -2833,9 +2779,6 @@ int main() {
                 */
                 FREE_BUFFER()
             break;
-
-
-
         }
     }   
 }

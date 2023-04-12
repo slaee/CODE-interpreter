@@ -17,7 +17,7 @@ int fail_count = 0;
             printf("test_(" ANSI_RED "%s" ANSI_RESET ") ... [" ANSI_RED "FAILED" ANSI_RESET "]\n", #condition); \
             fail_count++; \
         } \
-    } while(0) 
+    } while(0); 
 
 
 #define BEGIN_TEST(title) \

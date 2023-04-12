@@ -83,6 +83,7 @@ const char* tokentype_str_value[] = {
     [TOKEN_EQUAL]       = "=",
     [TOKEN_PLUSPLUS]    = "++",
     [TOKEN_MINUSMINUS]  = "--",
+    [TOKEN_EQEQUAL]     = "==",
     [TOKEN_NOTEQUAL]    = "<>",
     [TOKEN_GREATEREQUAL]= ">=",
     [TOKEN_LESSEQUAL]   = "<=",
@@ -111,6 +112,10 @@ Token* create_token(int type, char* lexeme) {
     return token;
 }
 
+int lex_lookback(Lexer* lexer) {
+    return lexer->source[lexer->pos - 1];
+}
+
 int lex_peek(Lexer* lexer) {
     return lexer->current_char;
 }
@@ -123,6 +128,7 @@ int lex_advance(Lexer* lexer) {
     }
     return lexer->current_char;
 }
+
 
 int lex_lookahead(Lexer* lexer) {
     if (lexer->pos + 1 < lexer->len) {
@@ -151,7 +157,7 @@ void lex_skip_whitespace(Lexer* lexer) {
 // eliminate comments using DFA transition table form
 void lex_skip_comment(Lexer* lexer) {
     int state, input;
-    state = input = 0;   
+    state = input = 0;
 
     while(1) {
         switch(lex_peek(lexer)) {
@@ -171,12 +177,13 @@ void lex_skip_comment(Lexer* lexer) {
         if(state == ERROR) {
             lex_error("Unexpected character", lexer->line, lexer->col);
             exit(1);
-        }
+        } 
+        
         if (state == 2) {
             break;
         }
         lex_advance(lexer);
-    }
+    } 
 }
 
 Token* lex_number(Lexer* lexer) {
@@ -388,15 +395,18 @@ Token* lex_newline(Lexer* lexer) {
     lex_skip_whitespace(lexer);
     while(1) {
         if(lex_peek(lexer) == NEWLINE) {
+            lexer->col = 1;
+            lexer->line++;
             lex_advance(lexer);
             lex_skip_whitespace(lexer);
         }
         else
             break;
+        
     }
     if (lex_peek(lexer) == '#') {
-        lex_skip_comment(lexer);    
-        lex_advance(lexer);
+        lex_skip_comment(lexer); 
+        lex_newline(lexer);
     }
     return create_token(TOKEN_NEWLINE, NULL);
 }
@@ -409,11 +419,10 @@ Token* lex_next_token(Lexer* lexer) {
             lexer->line++;
             return lex_newline(lexer);
         } 
+        else if(lex_peek(lexer) == '#')
+            lex_skip_comment(lexer);
         else if(lex_peek(lexer) == EOF)
             return create_token(TOKEN_EOF, NULL);
-        else if(lex_peek(lexer) == '#') {
-            lex_skip_comment(lexer);
-        }
         else if (lex_peek(lexer) == '"')
             return lex_string(lexer);
         else if (lex_peek (lexer) == '\'')
@@ -454,12 +463,14 @@ Token* lex_next_token(Lexer* lexer) {
                     }
                 case '=':
                     if(lex_advance(lexer) == '=') {
+                        lex_advance(lexer);
                         return create_token(TOKEN_EQEQUAL, NULL);
                     } else {
                         return create_token(TOKEN_EQUAL, NULL);
                     }
                 case '>':
                     if(lex_advance(lexer) == '=') {
+                        lex_advance(lexer);
                         return create_token(TOKEN_GREATEREQUAL, NULL);
                     } else {
                         return create_token(TOKEN_GREATERTHAN, NULL);
