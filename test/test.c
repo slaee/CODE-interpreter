@@ -13,7 +13,7 @@
 
 int main() {
     // test 1
-    int number_of_tests = 1;
+    int number_of_tests = 42;
     extern char* buffer;
     Lexer* lex;
 
