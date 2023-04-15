@@ -11,6 +11,7 @@ enum TokenType {
     TOKEN_STAR,
     TOKEN_SLASH,
     TOKEN_PERCENT,
+    TOKEN_POUND,
     TOKEN_DOLLAR,
     TOKEN_AMPERSAND,
     TOKEN_COLON,
@@ -61,8 +62,7 @@ enum TokenType {
     TOKEN_FNUMBER,
     TOKEN_STRING,
     TOKEN_BOOLEAN,
-    TOKEN_CHARACTER,
-    TOKEN_COMMENT,
+    TOKEN_CHARACTER
 };
 
 typedef struct token {

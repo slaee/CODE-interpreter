@@ -109,9 +109,7 @@ AST* code_parse_case_factor(Parser* parser);
 
 AST* code_parse_if_statement(Parser* parser);
 
-AST* code_parse_else_if_statements(Parser* parser);
-
-AST* code_parse_else_if_statement(Parser* parser);
+AST* code_parse_if_else_statements(Parser* parser);
 
 AST* code_parse_else_statement(Parser* parser);
 
@@ -120,5 +118,9 @@ AST* code_parse_while_loop(Parser* parser);
 AST* code_parse_for_loop(Parser* parser);
 
 AST* code_parse_do_while_loop(Parser* parser);
+
+AST* code_parse_break_statement(Parser* parser);
+
+AST* code_parse_continue_statement(Parser* parser);
 
 #endif

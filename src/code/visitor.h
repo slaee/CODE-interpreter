@@ -12,7 +12,7 @@ Visitor* init_code_visitor();
 
 AST* visitor_visit(Visitor* vistor, AST* node);
 
-AST* visitor_visit_variable_def(Visitor* vistor, AST* node);
+AST* visitor_visit_variable_declaration(Visitor* vistor, AST* node);
 
 AST* visitor_visit_variable(Visitor* vistor, AST* node);
 

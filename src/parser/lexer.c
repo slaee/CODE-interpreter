@@ -52,6 +52,7 @@ const char* tokentype_str_value[] = {
     [TOKEN_CASE]        = "CASE",
     [TOKEN_DEFAULT]     = "DEFAULT",
     [TOKEN_BREAK]       = "BREAK",
+    [TOKEN_CONTINUE]    = "CONTINUE",
     [TOKEN_OR]          = "OR",
     [TOKEN_AND]         = "AND",
     [TOKEN_NOT]         = "NOT",
@@ -73,6 +74,7 @@ const char* tokentype_str_value[] = {
     [TOKEN_SLASH]       = "/",
     [TOKEN_PERCENT]     = "%",
     [TOKEN_DOLLAR]      = "$",
+    [TOKEN_POUND]       = "#",
     [TOKEN_AMPERSAND]   = "&",
     [TOKEN_COLON]       = ":",
     [TOKEN_COMMA]       = ",",
@@ -315,6 +317,9 @@ Token* lex_identifier(Lexer* lexer) {
     else if (strcmp(val, "BREAK") == 0) {
         return create_token(TOKEN_BREAK, val);
     }
+    else if (strcmp(val, "CONTINUE") == 0) {
+        return create_token(TOKEN_CONTINUE, val);
+    }
     else if (strcmp(val, "AND") == 0) {
         return create_token(TOKEN_AND, val);
     }
@@ -416,6 +421,7 @@ Token* lex_newline(Lexer* lexer) {
     }
     if (lex_peek(lexer) == '#') {
         lex_skip_comment(lexer); 
+        lexer->line++;
         lex_newline(lexer);
     }
     return create_token(TOKEN_NEWLINE, NULL);
@@ -429,8 +435,14 @@ Token* lex_next_token(Lexer* lexer) {
             lexer->line++;
             return lex_newline(lexer);
         } 
-        else if(lex_peek(lexer) == '#')
-            lex_skip_comment(lexer);
+        else if(lex_peek(lexer) == '#') {
+            if(lex_lookback(lexer) == '[') {
+                lex_advance(lexer);
+                return create_token(TOKEN_POUND, NULL);
+            }
+            else 
+                lex_skip_comment(lexer);
+        }
         else if(lex_peek(lexer) == EOF)
             return create_token(TOKEN_EOF, NULL);
         else if (lex_peek(lexer) == '"')
@@ -514,6 +526,34 @@ Token* lex_next_token(Lexer* lexer) {
     
     return create_token(TOKEN_EOF, NULL);
 }
+
+void ts_append(TokenStream* ts, Token* token) {
+    ts->tokens[ts->size++] = token;
+}
+
+TokenStream* lex_tokenize(Lexer* lexer) {
+    TokenStream* ts = (TokenStream*) malloc(sizeof(TokenStream));
+    ts->tokens = (Token**) malloc(sizeof(Token*) * 100);
+    ts->size = 0;
+    ts->pos = 0;
+
+    Token* token = lex_next_token(lexer);
+    while(token->type != TOKEN_EOF) {
+        ts_append(ts, token);
+        token = lex_next_token(lexer);
+    }
+    ts_append(ts, token);
+    return ts;
+}
+
+Token* ts_peek(TokenStream* ts) {
+    return ts->tokens[ts->pos];
+}
+
+Token* ts_advance(TokenStream* ts) {
+    return ts->tokens[ts->pos++];
+}
+
 
 void lexer_free(Lexer* lexer) {
     free(lexer);
