@@ -99,8 +99,8 @@ Lexer* init_code_lexer(char* source, int len) {
     lex->source = source;
     lex->len = len;
     lex->pos = 0;
-    lex->line = 1;
-    lex->col = 1;
+    lex->line = 0;
+    lex->col = 0;
     lex->current_char = lex->source[lex->pos];
     return lex;
 }
@@ -410,7 +410,7 @@ Token* lex_newline(Lexer* lexer) {
     lex_skip_whitespace(lexer);
     while(1) {
         if(lex_peek(lexer) == NEWLINE) {
-            lexer->col = 1;
+            lexer->col = 0;
             lexer->line++;
             lex_advance(lexer);
             lex_skip_whitespace(lexer);
@@ -431,7 +431,7 @@ Token* lex_next_token(Lexer* lexer) {
     while(lexer->current_char != EOF && lexer->pos < lexer->len) {
         lex_skip_whitespace(lexer);
         if(lex_peek(lexer) == NEWLINE) {
-            lexer->col = 1;
+            lexer->col = 0;
             lexer->line++;
             return lex_newline(lexer);
         } 
@@ -554,6 +554,9 @@ Token* ts_advance(TokenStream* ts) {
     return ts->tokens[ts->pos++];
 }
 
+int ts_lookahead(TokenStream* ts, int n) {
+    return ts->tokens[ts->pos + n]->type;
+}
 
 void lexer_free(Lexer* lexer) {
     free(lexer);
