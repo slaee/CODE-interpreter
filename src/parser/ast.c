@@ -3,19 +3,20 @@
 AST* init_code_ast(enum AST_Type type) {
     AST* ast = (AST*) malloc(sizeof(AST)); 
     ast->type = type;
-
-    ast->variable_declaration_type = (void*)0;
-    ast->variable_declaration_names = (void*)0;
-
-    ast->variable_name = (void*)0;
-
-    ast->func_call_name = (void*)0;
-    ast->func_call_args = (void*)0;
-    ast->func_call_args_size = 0;
-
-    ast->string_value = (void*)0;
-
-    ast->compound_statements = (void*) 0;
-    ast->compound_size = 0;
     return ast;
+}
+
+AST** init_children(size_t size) {
+    AST** children = (AST**) malloc(size);
+    return children;
+}
+
+void ast_add_child(AST* parent, AST* child) {
+    if (parent->children == NULL) {
+        parent->children = (AST**) malloc(sizeof(void*));
+        parent->children_size = 0;
+    }
+    
+    parent->children[parent->children_size] = child;
+    parent->children_size++;
 }

@@ -2,16 +2,25 @@
 #define _AST_H_
 
 #include <stdlib.h>
+#include "types.h"
 
 enum AST_Type {
-    AST_VARIABLE_DECLARATIONS,
+    AST_DEFINITIONS,
+    AST_VARIABLE_DECLS,
+    AST_FUNCTION_DECLS,
+    AST_FUNCTION_DECL,
+    AST_VARIABLE,
     AST_ASSIGNMENT,
-    AST_ARITHMETIC_EXPRESSION,
-    AST_STRING_VAL_EXPRESSION,
-    AST_BOOLEAN_EXPRESSION,
+    AST_EXPRESSION,
+    AST_NUMBER,
+    AST_INT,
+    AST_FLOAT,
+    AST_CHAR,
+    AST_STRING,
+    AST_BOOLEAN,
+    AST_CHARACTER,
     AST_IF_STATEMENT,
     AST_WHILE_STATEMENT,
-    AST_VARIABLE,
     AST_FUNCTION_CALL,
     AST_COMPOUND,
     AST_NOOP,
@@ -20,27 +29,34 @@ enum AST_Type {
 typedef struct ast{
     enum AST_Type type;
 
-    // ast variable definition
-    char* variable_declaration_type;
-    struct ast** variable_declaration_names;
+     // variable declarations
+    DataType data_type;
+    char* name;
+    
+    // operators
+    int operator;
 
-    // ast variable
-    char* variable_name;
-
-    // ast function call
-    char* func_call_name;
-    struct ast** func_call_args;
-    size_t func_call_args_size;
-
-    // ast string
+    // literals
+    int int_value;
+    float float_value;
     char* string_value;
-
     char* boolean_value;
+    char character_value;
 
-    struct ast** compound_statements;
-    size_t compound_size;
+    struct ast* value;
+    struct ast* left;
+    struct ast* right;
+
+    struct ast** children;
+    size_t children_size;
 } AST;
 
 AST* init_code_ast(enum AST_Type type);
+
+AST** init_children(size_t size);
+
+void ast_add_child(AST* parent, AST* child);
+
+void ast_add_sibling(AST* parent, AST* child);
 
 #endif
