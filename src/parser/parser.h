@@ -45,7 +45,7 @@ AST* code_parse_statement(Parser* parser);
 
 AST* code_parse_variable_declaration(Parser* parser);
 
-AST* code_parse_variable_declaration_prime(Parser* parser);
+AST* code_parse_variable_declaration_prime(Parser* parser, int data_type);
 
 AST* code_parse_assignment(Parser* parser);
 
@@ -53,11 +53,11 @@ AST* code_parse_expression(Parser* parser);
 
 AST* code_parse_arithmetic_expression(Parser* parser);
 
-AST* code_parse_arithmetic_expression_prime(Parser* parser);
+AST* code_parse_arithmetic_expression_prime(Parser* parser, AST* left);
 
 AST* code_parse_term(Parser* parser);
 
-AST* code_parse_term_prime(Parser* parser);
+AST* code_parse_term_prime(Parser* parser, AST* left);
 
 AST* code_parse_factor(Parser* parser);
 
