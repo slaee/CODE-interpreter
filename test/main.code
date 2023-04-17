@@ -1,4 +1,5 @@
 BEGIN CODE
-    INT b, a, b = 1
+    INT b = (a * b)
     # diplay here 
+    DISPLAY: (a + b)
 END CODE

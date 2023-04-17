@@ -11,6 +11,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     src/main.c
     src/parser/lexer.c
     src/parser/parser.c
+    src/parser/types.c
     src/parser/ast.c
     src/code/visitor.c
   )
@@ -20,6 +21,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES Test)
     test/test.c
     src/parser/lexer.c
     src/parser/parser.c
+    src/parser/types.c
     src/parser/ast.c
     src/code/visitor.c
   )
