@@ -172,7 +172,7 @@ AST* code_parse_assignment(Parser* parser) {
              /**/ assignment->value = code_parse_expression(parser);
         }
     }
-
+    
     return assignment;
 }
 
@@ -186,6 +186,7 @@ AST* code_parse_expression(Parser* parser) {
                 case TOKEN_MINUS:
                 case TOKEN_STAR:
                 case TOKEN_SLASH:
+                case TOKEN_PERCENT:
                     return code_parse_arithmetic_expression(parser);
                 
                 case TOKEN_AMPERSAND:
@@ -222,6 +223,7 @@ AST* code_parse_expression(Parser* parser) {
                 case TOKEN_MINUS:
                 case TOKEN_STAR:
                 case TOKEN_SLASH:
+                case TOKEN_PERCENT:
                     return code_parse_arithmetic_expression(parser);
                 
                 case TOKEN_AMPERSAND:
@@ -244,6 +246,9 @@ AST* code_parse_expression(Parser* parser) {
             break;
         case TOKEN_PLUS:
         case TOKEN_MINUS:
+        case TOKEN_STAR:
+        case TOKEN_SLASH:
+        case TOKEN_PERCENT:
         case TOKEN_NUMBER:
             return code_parse_arithmetic_expression(parser);
 
@@ -300,7 +305,7 @@ AST* code_parse_term(Parser* parser){
 
 AST* code_parse_term_prime(Parser* parser, AST* left){
     AST* term = left;
-    while (token_peek(parser) == TOKEN_STAR || token_peek(parser) == TOKEN_SLASH) {
+    while (token_peek(parser) == TOKEN_STAR || token_peek(parser) == TOKEN_SLASH || token_peek(parser) == TOKEN_PERCENT) {
         AST* binop = init_code_ast(AST_EXPRESSION);
         /**/ binop->left = left;
         switch(token_peek(parser)) {
@@ -312,6 +317,11 @@ AST* code_parse_term_prime(Parser* parser, AST* left){
             case TOKEN_SLASH:
                 /**/ binop->operator = TOKEN_SLASH;
                 parser_expect_token(parser, TOKEN_SLASH);
+                /**/ binop->right = code_parse_factor(parser);
+                break;
+            case TOKEN_PERCENT:
+                /**/ binop->operator = TOKEN_PERCENT;
+                parser_expect_token(parser, TOKEN_PERCENT);
                 /**/ binop->right = code_parse_factor(parser);
                 break;
         }
