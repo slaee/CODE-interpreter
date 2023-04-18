@@ -38,7 +38,7 @@ int number_T[5][2] = {
 };
 
 
-const char* tokentype_str_value[] = {
+char* tokentype_str_value[] = {
     [TOKEN_BEGIN]       = "BEGIN",
     [TOKEN_CODE]        = "CODE",
     [TOKEN_END]         = "END",
