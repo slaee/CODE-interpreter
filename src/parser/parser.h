@@ -67,13 +67,9 @@ AST* code_parse_function_call(Parser* parser);
 
 AST* code_parse_args(Parser* parser);
 
-AST* code_parse_args_prime(Parser* parser);
-
 AST* code_parse_arg(Parser* parser);
 
 AST* code_parse_string_val_expression(Parser* parser);
-
-AST* code_parse_string_val_expression_prime(Parser* parser);
 
 AST* code_parse_constants(Parser* parser);
 
@@ -93,7 +89,7 @@ AST* code_parse_switch_case(Parser* parser);
 
 AST* code_parse_boolean_expression(Parser* parser);
 
-AST* code_parse_boolean_expression_prime(Parser* parser);
+AST* code_parse_boolean_expression_prime(Parser* parser, AST* left);
 
 AST* code_parse_boolean_factor(Parser* parser);
 
