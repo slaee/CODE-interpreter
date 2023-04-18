@@ -23,9 +23,8 @@ void parser_expect_token(Parser* parser, enum TokenType type) {
         //printf("%s\n", tokentype_str_value[type]);
     } else {
         printf(
-            "Syntax Error: Unexpected token %s with type %s at line %d, col %d\n", 
+            "Syntax Error: Unexpected token type name ‘%s’ at line %d, col %d\n", 
             parser->current_token->value,
-            tokentype_str_value[parser->current_token->type],
             parser->lexer->line, 
             parser->lexer->col
         );
@@ -99,6 +98,8 @@ AST* code_parse_statement(Parser* parser) {
         case TOKEN_CONTINUE:
             return code_parse_continue_statement(parser);
     }
+
+    return init_code_ast(AST_NOOP);
 }
 
 AST* code_parse_variable_declaration(Parser* parser) {
@@ -265,7 +266,7 @@ AST* code_parse_expression(Parser* parser) {
 
 AST* code_parse_arithmetic_expression(Parser* parser) {
     AST* left = code_parse_term(parser);
-    code_parse_arithmetic_expression_prime(parser, left);
+    return code_parse_arithmetic_expression_prime(parser, left);
 }
 
 AST* code_parse_arithmetic_expression_prime(Parser* parser, AST* left) {
@@ -294,7 +295,7 @@ AST* code_parse_arithmetic_expression_prime(Parser* parser, AST* left) {
 
 AST* code_parse_term(Parser* parser){
     AST* left = code_parse_factor(parser);
-    code_parse_term_prime(parser, left);
+    return code_parse_term_prime(parser, left);
 }
 
 AST* code_parse_term_prime(Parser* parser, AST* left){
@@ -384,80 +385,103 @@ AST* code_parse_paren(Parser* parser){
     return expression;
 }
 
-AST* code_parse_function_call(Parser* parser){
+AST* code_parse_function_call(Parser* parser) {
+    AST* function_call = init_code_ast(AST_FUNCTION_CALL);
+    function_call->children = init_children(sizeof(AST*));
+    function_call->name = parser->previous_token->value;
+
     if(parser->previous_token->type == TOKEN_IDENTIFIER) {
         parser_expect_token(parser, TOKEN_COLON);
-        code_parse_args(parser);
+        ast_add_child(function_call, code_parse_args(parser));
     } 
+
+    return function_call;
 }
 
 AST* code_parse_args(Parser* parser){
-    code_parse_arg(parser);
-
+    AST* function_call_args = init_code_ast(AST_ARGS);
+    function_call_args->children = init_children(sizeof(AST*));
+    
+    ast_add_child(function_call_args, code_parse_arg(parser));
     while(token_peek(parser) == TOKEN_COMMA) {
-        code_parse_args_prime(parser);
+        parser_expect_token(parser, TOKEN_COMMA);
+        ast_add_child(function_call_args, code_parse_arg(parser));
     }
-}
 
-
-AST* code_parse_args_prime(Parser* parser){
-    parser_expect_token(parser, TOKEN_COMMA);
-    code_parse_arg(parser);
+    return function_call_args;
 }
 
 AST* code_parse_arg(Parser* parser){
-    code_parse_expression(parser);
+    return code_parse_expression(parser);
 }
 
 AST* code_parse_string_val_expression(Parser* parser){
-    code_parse_constants(parser);
+    AST* expression = code_parse_constants(parser);
     while(token_peek(parser) == TOKEN_AMPERSAND) {
-        code_parse_string_val_expression_prime(parser);
-    }
-}
-
-AST* code_parse_string_val_expression_prime(Parser* parser){
-    if(token_peek(parser) == TOKEN_AMPERSAND) {
+        AST* binop = init_code_ast(AST_EXPRESSION);
+        /**/ binop->left = expression;
+        /**/ binop->operator = TOKEN_AMPERSAND;
         parser_expect_token(parser, TOKEN_AMPERSAND);
-        code_parse_constants(parser);
+        binop->right = code_parse_constants(parser);
+
+        expression = binop;
     }
+
+    return expression;
 }
 
 AST* code_parse_constants(Parser* parser){
+    AST* constant = init_code_ast(AST_STRING);
     switch(token_peek(parser)) {
         case TOKEN_LBRACKET:
             parser_expect_token(parser, TOKEN_LBRACKET);
             switch(token_peek(parser)) {
                 case TOKEN_LBRACKET:
+                    constant->string_value = parser->current_token->value;
                     parser_expect_token(parser, TOKEN_LBRACKET);
                     break;
                 case TOKEN_RBRACKET:
+                    constant->string_value = parser->current_token->value;
                     parser_expect_token(parser, TOKEN_RBRACKET);
                     break;
                 case TOKEN_POUND:
+                    constant->string_value = parser->current_token->value;
                     parser_expect_token(parser, TOKEN_POUND);
                     break;
             }
             parser_expect_token(parser, TOKEN_RBRACKET);
             break; 
         case TOKEN_DOLLAR:
+            constant->string_value = parser->current_token->value;
             parser_expect_token(parser, TOKEN_DOLLAR);
             break;
         case TOKEN_STRING:
+            constant->string_value = parser->current_token->value;
             parser_expect_token(parser, TOKEN_STRING);
             break;
         case TOKEN_NUMBER:
+            constant->type = AST_NUMBER;
+            if(strchr(parser->current_token->value, '.')) {
+                constant->type = AST_FLOAT;
+                constant->float_value = atof(parser->current_token->value);
+            } else {
+                constant->type = AST_INT;
+                constant->int_value = atoi(parser->current_token->value);
+            }
             parser_expect_token(parser, TOKEN_NUMBER);
             break;
         case TOKEN_BOOLEAN:
+            constant->type = AST_BOOLEAN;
+            constant->boolean_value = parser->current_token->value;
             parser_expect_token(parser, TOKEN_BOOLEAN);
             break;
         case TOKEN_IDENTIFIER:
+            constant->type = AST_VARIABLE;
+            constant->name = parser->current_token->value;
             parser_expect_token(parser, TOKEN_IDENTIFIER);
             break;
         case TOKEN_LPAREN:
-            code_parse_paren(parser);
-            break;
+            return code_parse_paren(parser);
         default:
             printf(
                 "Syntax Error: Unexpected token %s at line %d, col %d\n", 
@@ -467,26 +491,28 @@ AST* code_parse_constants(Parser* parser){
             );
             exit(1);
     }
+
+    return constant;
 }
 
 AST* code_parse_function_declaration(Parser* parser){
-    
+    // TODO: Implement function declaration
 }
 
 AST* code_parse_function_params(Parser* parser){
-    
+    // TODO: Implement function params
 }
 
 AST* code_parse_function_params_prime(Parser* parser){
-    
+    // TODO: Implement function params prime
 }
 
 AST* code_parse_function_definition(Parser* parser){
-    
+    // TODO: Implement function definition
 }
 
 AST* code_parse_function_return_statement(Parser* parser){
-    
+    // TODO: Implement funciton return statement
 }
 
 AST* code_parse_switch_case(Parser* parser){
@@ -504,7 +530,12 @@ AST* code_parse_switch_case(Parser* parser){
 }
 
 AST* code_parse_boolean_expression(Parser* parser){
-    code_parse_boolean_factor(parser);
+    AST* left = code_parse_boolean_factor(parser);
+    return code_parse_boolean_expression_prime(parser, left);
+}
+
+AST* code_parse_boolean_expression_prime(Parser* parser, AST* left){
+    AST* expression = left;
     while(token_peek(parser) == TOKEN_LESSTHAN || 
         token_peek(parser) == TOKEN_GREATERTHAN ||
         token_peek(parser) == TOKEN_GREATEREQUAL ||
@@ -514,65 +545,94 @@ AST* code_parse_boolean_expression(Parser* parser){
         token_peek(parser) == TOKEN_AND ||
         token_peek(parser) == TOKEN_OR ||
         token_peek(parser) == TOKEN_NOT) {
-            code_parse_boolean_expression_prime(parser);
+        AST* binop = init_code_ast(AST_EXPRESSION);
+        switch(token_peek(parser)) {
+            case TOKEN_LESSTHAN:
+                binop->left = expression;
+                binop->operator = TOKEN_LESSTHAN;
+                parser_expect_token(parser, TOKEN_LESSTHAN);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_GREATERTHAN:
+                binop->left = expression;
+                binop->operator = TOKEN_GREATERTHAN;
+                parser_expect_token(parser, TOKEN_GREATERTHAN);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_GREATEREQUAL:
+                binop->left = expression;
+                binop->operator = TOKEN_GREATEREQUAL;
+                parser_expect_token(parser, TOKEN_GREATEREQUAL);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_LESSEQUAL:
+                binop->left = expression;
+                binop->operator = TOKEN_LESSEQUAL;
+                parser_expect_token(parser, TOKEN_LESSEQUAL);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_EQEQUAL:
+                binop->left = expression;
+                binop->operator = TOKEN_EQEQUAL;
+                parser_expect_token(parser, TOKEN_EQEQUAL);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_NOTEQUAL:
+                binop->left = expression;
+                binop->operator = TOKEN_NOTEQUAL;
+                parser_expect_token(parser, TOKEN_NOTEQUAL);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_AND:
+                binop->left = expression;
+                binop->operator = TOKEN_AND;
+                parser_expect_token(parser, TOKEN_AND);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_OR:
+                binop->left = expression;
+                binop->operator = TOKEN_OR;
+                parser_expect_token(parser, TOKEN_OR);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
+            case TOKEN_NOT:
+                binop->left = expression;
+                binop->operator = TOKEN_OR;
+                parser_expect_token(parser, TOKEN_NOT);
+                binop->right = code_parse_boolean_factor(parser);
+                break;
         }
-}
-
-AST* code_parse_boolean_expression_prime(Parser* parser){
-    switch(token_peek(parser)) {
-        case TOKEN_LESSTHAN:
-            parser_expect_token(parser, TOKEN_LESSTHAN);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_GREATERTHAN:
-            parser_expect_token(parser, TOKEN_GREATERTHAN);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_GREATEREQUAL:
-            parser_expect_token(parser, TOKEN_GREATEREQUAL);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_LESSEQUAL:
-            parser_expect_token(parser, TOKEN_LESSEQUAL);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_EQEQUAL:
-            parser_expect_token(parser, TOKEN_EQEQUAL);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_NOTEQUAL:
-            parser_expect_token(parser, TOKEN_NOTEQUAL);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_AND:
-            parser_expect_token(parser, TOKEN_AND);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_OR:
-            parser_expect_token(parser, TOKEN_OR);
-            code_parse_boolean_factor(parser);
-            break;
-        case TOKEN_NOT:
-            parser_expect_token(parser, TOKEN_NOT);
-            code_parse_boolean_factor(parser);
-            break;
     }
+
+    return expression;
 }
 
 AST* code_parse_boolean_factor(Parser* parser){
+    AST* constant = NULL;
     switch(token_peek(parser)){
         case TOKEN_BOOLEAN:
+            constant = init_code_ast(AST_BOOLEAN);
+            constant->boolean_value =  parser->current_token->value;
             parser_expect_token(parser, TOKEN_BOOLEAN);
             break;
         case TOKEN_IDENTIFIER:
+            constant = init_code_ast(AST_VARIABLE);
+            constant->name =  parser->current_token->value;
             parser_expect_token(parser, TOKEN_IDENTIFIER);
             break;
         case TOKEN_NUMBER:
+            constant = init_code_ast(AST_NUMBER);
+            if(strchr(parser->current_token->value, '.')) {
+                constant->type = AST_FLOAT;
+                constant->float_value = atof(parser->current_token->value);
+            } else {
+                constant->type = AST_INT;
+                constant->int_value = atoi(parser->current_token->value);
+            }
             parser_expect_token(parser, TOKEN_NUMBER);
             break;
         case TOKEN_LPAREN:
-            code_parse_paren(parser);
-            break;
+            return code_parse_paren(parser);
         default:
             printf(
                 "Syntax Error: Unexpected token %s at line %d, col %d\n", 
@@ -582,6 +642,8 @@ AST* code_parse_boolean_factor(Parser* parser){
             );
             exit(1);
     }
+
+    return constant;
 }
 
 AST* code_parse_case_statements(Parser* parser){
@@ -709,6 +771,7 @@ AST* code_parse_for_loop(Parser* parser){
 AST* code_parse_do_while_loop(Parser* parser){
     
 }
+
 
 /*
     program: NEWLINE* BEGIN CODE NEWLINE* statements END CODE NEWLINE*
