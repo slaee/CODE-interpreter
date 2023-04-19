@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "parser.h"
 #include "types.h"
@@ -112,7 +113,7 @@ AST* code_parse_variable_declaration(Parser* parser) {
     AST* variable_decl = init_code_ast(AST_VARIABLE);
     /**/ variable_decl->data_type = to_data_type(parser->current_token->value);
     parser_expect_token(parser, TOKEN_TYPE);
-    /**/ variable_decl->name = parser->previous_token->value;
+    /**/ variable_decl->name = parser->current_token->value;
     parser_expect_token(parser, TOKEN_IDENTIFIER);
     
     if(token_peek(parser) == TOKEN_EQUAL) {
@@ -156,10 +157,13 @@ AST* code_parse_assignment(Parser* parser) {
     /**/ assignment->name = parser->previous_token->value;
     if(parser->previous_token->type == TOKEN_IDENTIFIER) {
         parser_expect_token(parser, TOKEN_EQUAL);
-        if(token_peek(parser) == TOKEN_CHARACTER) 
+        if(token_peek(parser) == TOKEN_CHARACTER)  {
+            assignment->character_value = parser->current_token->value[0];
             parser_expect_token(parser, TOKEN_CHARACTER);
-        else 
-            code_parse_expression(parser);
+        }
+        else {
+            assignment->value = code_parse_expression(parser);
+        }
     } else {
         /**/ assignment->name = parser->current_token->value;
         parser_expect_token(parser, TOKEN_IDENTIFIER);
@@ -182,6 +186,7 @@ AST* code_parse_expression(Parser* parser) {
             switch(ts_lookahead(tokens, 0)) {
                 case TOKEN_EQUAL:
                     return code_parse_assignment(parser);
+
                 case TOKEN_PLUS:
                 case TOKEN_MINUS:
                 case TOKEN_STAR:
@@ -278,7 +283,7 @@ AST* code_parse_arithmetic_expression_prime(Parser* parser, AST* left) {
     AST* expression = left;
 
     while (token_peek(parser) == TOKEN_PLUS || token_peek(parser) == TOKEN_MINUS) {
-        AST* binop = init_code_ast(AST_EXPRESSION);
+        AST* binop = init_code_ast(AST_ARITHMETIC_EXPRESSION);
         /**/ binop->left = left;
         switch(token_peek(parser)) {
             case TOKEN_PLUS:
@@ -306,7 +311,7 @@ AST* code_parse_term(Parser* parser){
 AST* code_parse_term_prime(Parser* parser, AST* left){
     AST* term = left;
     while (token_peek(parser) == TOKEN_STAR || token_peek(parser) == TOKEN_SLASH || token_peek(parser) == TOKEN_PERCENT) {
-        AST* binop = init_code_ast(AST_EXPRESSION);
+        AST* binop = init_code_ast(AST_ARITHMETIC_EXPRESSION);
         /**/ binop->left = left;
         switch(token_peek(parser)) {
             case TOKEN_STAR:
@@ -332,7 +337,7 @@ AST* code_parse_term_prime(Parser* parser, AST* left){
 }
 
 AST* code_parse_unary(Parser* parser) {
-    AST* unary = init_code_ast(AST_EXPRESSION);
+    AST* unary = init_code_ast(AST_UNARY_EXPRESSION);
     switch(token_peek(parser)) {
         case TOKEN_PLUS:
             /**/ unary->operator = TOKEN_PLUS;
@@ -340,7 +345,6 @@ AST* code_parse_unary(Parser* parser) {
             /**/ unary->right = code_parse_factor(parser);
            break;
         case TOKEN_MINUS:
-            AST* unary = init_code_ast(AST_EXPRESSION);
             /**/ unary->operator = TOKEN_MINUS;
             parser_expect_token(parser, TOKEN_MINUS);
             /**/ unary->right = code_parse_factor(parser);
@@ -391,6 +395,7 @@ AST* code_parse_paren(Parser* parser){
     AST* expression = NULL;
     parser_expect_token(parser, TOKEN_LPAREN);
     expression = code_parse_expression(parser);
+    expression->type = AST_PAREN_EXPRESSION;
     parser_expect_token(parser, TOKEN_RPAREN);
     return expression;
 }
@@ -428,7 +433,7 @@ AST* code_parse_arg(Parser* parser){
 AST* code_parse_string_val_expression(Parser* parser){
     AST* expression = code_parse_constants(parser);
     while(token_peek(parser) == TOKEN_AMPERSAND) {
-        AST* binop = init_code_ast(AST_EXPRESSION);
+        AST* binop = init_code_ast(AST_CONCAT_EXPRESSION);
         /**/ binop->left = expression;
         /**/ binop->operator = TOKEN_AMPERSAND;
         parser_expect_token(parser, TOKEN_AMPERSAND);
@@ -555,7 +560,7 @@ AST* code_parse_boolean_expression_prime(Parser* parser, AST* left){
         token_peek(parser) == TOKEN_AND ||
         token_peek(parser) == TOKEN_OR ||
         token_peek(parser) == TOKEN_NOT) {
-        AST* binop = init_code_ast(AST_EXPRESSION);
+        AST* binop = init_code_ast(AST_BOOLEAN_EXPRESSION);
         switch(token_peek(parser)) {
             case TOKEN_LESSTHAN:
                 binop->left = expression;

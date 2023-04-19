@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(code-interpreter)
+project(code-scratch)
 
 include_directories(./include/internal)
 include_directories(./include/utils)
@@ -7,21 +7,25 @@ include_directories(./include/utils)
 # Set source files based on environment
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   add_executable(
-    code-interpreter
+    code-scratch
     src/main.c
     src/parser/lexer.c
+    src/parser/symtab.c
     src/parser/parser.c
     src/parser/types.c
+    src/parser/symtab.c
     src/parser/ast.c
     src/code/visitor.c
   )
 elseif(CMAKE_BUILD_TYPE MATCHES Test)
   add_executable(
-    code-interpreter
+    code-scratch
     test/test.c
     src/parser/lexer.c
+    src/parser/symtab.c
     src/parser/parser.c
     src/parser/types.c
+    src/parser/symtab.c
     src/parser/ast.c
     src/code/visitor.c
   )
@@ -41,17 +45,3 @@ endif()
 # if(CMAKE_BUILD_TYPE MATCHES Test)
 #   set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -Werror")
 # endif()
-
-# for debugging
-# add_executable(
-#     code-interpreter
-#     src/main.c
-#     src/parser/lexer.c
-# )
-
-# for testing
-# add_executable(
-#     code-interpreter
-#     test/test.c
-#     src/parser/lexer.c
-# )

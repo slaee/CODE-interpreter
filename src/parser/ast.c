@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "ast.h"
 
 AST* init_code_ast(enum AST_Type type) {

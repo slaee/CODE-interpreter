@@ -1,7 +1,6 @@
 #ifndef _AST_H_
 #define _AST_H_
 
-#include <stdlib.h>
 #include "types.h"
 
 enum AST_Type {
@@ -10,7 +9,11 @@ enum AST_Type {
     AST_FUNCTION_DECLS,
     AST_VARIABLE,
     AST_ASSIGNMENT,
-    AST_EXPRESSION,
+    AST_CONCAT_EXPRESSION,
+    AST_ARITHMETIC_EXPRESSION,
+    AST_BOOLEAN_EXPRESSION,
+    AST_UNARY_EXPRESSION,
+    AST_PAREN_EXPRESSION,
     AST_NUMBER,
     AST_INT,
     AST_FLOAT,
@@ -18,7 +21,7 @@ enum AST_Type {
     AST_STRING,
     AST_BOOLEAN,
     AST_CHARACTER,
-    AST_IF_STATEMENT,
+    AST_IF_ELSE_STATEMENT,
     AST_WHILE_STATEMENT,
     AST_FUNCTION_CALL,
     AST_ARGS,
