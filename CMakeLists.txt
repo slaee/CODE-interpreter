@@ -7,7 +7,7 @@ include_directories(./include/utils)
 # Set source files based on environment
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   add_executable(
-    code-scratch
+    code-interpreter
     src/main.c
     src/parser/lexer.c
     src/parser/symtab.c
@@ -19,7 +19,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
   )
 elseif(CMAKE_BUILD_TYPE MATCHES Test)
   add_executable(
-    code-scratch
+    code-interpreter
     test/test.c
     src/parser/lexer.c
     src/parser/symtab.c

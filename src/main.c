@@ -18,7 +18,6 @@ int main() {
     Visitor* visitor = init_visitor();
     visit(root, visitor);
 
-    printf("hello");
 
     // Token* token;
     // while((token = lex_next_token(lex)) && (token->type != TOKEN_EOF)) {

@@ -1,4 +1,3 @@
 BEGIN CODE	
-	INT a, b, c = 1 % 1
-	INT a
+	INT a, b
 END CODE
