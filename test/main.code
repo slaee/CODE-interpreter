@@ -1,4 +1,3 @@
-BEGIN CODE
-    INT b, a, b = 1
-    # diplay here 
+BEGIN CODE	
+	INT a, b
 END CODE

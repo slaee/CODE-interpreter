@@ -10,7 +10,10 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     code-interpreter
     src/main.c
     src/parser/lexer.c
+    src/parser/symtab.c
     src/parser/parser.c
+    src/parser/types.c
+    src/parser/symtab.c
     src/parser/ast.c
     src/code/visitor.c
   )
@@ -19,7 +22,10 @@ elseif(CMAKE_BUILD_TYPE MATCHES Test)
     code-interpreter
     test/test.c
     src/parser/lexer.c
+    src/parser/symtab.c
     src/parser/parser.c
+    src/parser/types.c
+    src/parser/symtab.c
     src/parser/ast.c
     src/code/visitor.c
   )
@@ -39,17 +45,3 @@ endif()
 # if(CMAKE_BUILD_TYPE MATCHES Test)
 #   set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -Werror")
 # endif()
-
-# for debugging
-# add_executable(
-#     code-interpreter
-#     src/main.c
-#     src/parser/lexer.c
-# )
-
-# for testing
-# add_executable(
-#     code-interpreter
-#     test/test.c
-#     src/parser/lexer.c
-# )

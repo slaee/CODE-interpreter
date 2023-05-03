@@ -1,5 +1,5 @@
 BEGIN CODE
-INT a=100, b=200, c=300, x=0 
+INT a=100, b=200, c=300, x=0
 BOOL d="TRUE"
 IF (a == 100)
 BEGIN IF

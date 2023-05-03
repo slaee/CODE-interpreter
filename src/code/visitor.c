@@ -1,96 +1,238 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "visitor.h"
+#include "../parser/types.h"
+#include "../parser/ast.h"
+#include "../parser/symtab.h"
 
-static AST* builtin_function_display(Visitor* visitor, AST** args, size_t arg_size) {
-    int i;
-    for(i = 0; i < arg_size; i++) {
-        AST* visit = visitor_visit(visitor, args[i]);
+SYMBOL_TABLE* symtab;
 
-        switch(visit->type) {
-            case AST_BOOLEAN: printf("%p: %s\n", visit, visit->boolean_value); break;
-            default: printf("%p\n", visit); break;
-        }
-    }
-
-    return init_code_ast(AST_NOOP);
-}
-
-Visitor* init_code_visitor() {
+Visitor* init_visitor() {
+    symtab = create_symbol_table();
     Visitor* visitor = (Visitor*) malloc(sizeof(Visitor));
-    visitor->variable_defs = (void*) 0;
-    visitor->variable_defs_size = 0;
-
     return visitor;
 }
 
-AST* visitor_visit(Visitor* visitor, AST* node) {
-    switch(node->type) {
-        case AST_VARIABLE_DEFINITION: return visitor_visit_variable_def(visitor, node);
-        case AST_VARIABLE: return visitor_visit_variable(visitor, node);
-        case AST_FUNCTION_CALL: return visitor_visit_func_call(visitor, node);
-        case AST_STRING: return visitor_visit_string(visitor, node);
-        case AST_BOOLEAN: return visitor_visit_boolean(visitor, node);
-        case AST_COMPOUND: return visitor_visit_compound(visitor, node);
-        case AST_NOOP: return node;
+void visit_statements(AST* ast, Visitor* visitor) {
+    unsigned int i;
+    for(i = 0; i < ast->children_size; ++i) {
+        visit(ast->children[i], visitor);
     }
+}
     
-    printf("Uncaught statement of type '%d\n", node->type);
-    exit(1);
-}
+void visit(AST* ast, Visitor* visitor) {
+    switch(ast->type) {
+        // visiting compound statements
+        case AST_COMPOUND: 
+            visit_compound(ast, visitor);
+            break;
+        
+        // visiting declaration group of nodes
+        case AST_DECLARATIONS:
+            visit_declarations(ast, visitor);
+            break;
 
-AST* visitor_visit_variable_def(Visitor* visitor, AST* node) {
-    if(visitor->variable_defs == (void*) 0) {
-        visitor->variable_defs = (AST**) malloc(sizeof(AST*));
-        visitor->variable_defs[0] = node;
-        visitor->variable_defs_size += 1;
-    } else {
-        visitor->variable_defs = (AST**) realloc(
-            visitor->variable_defs, 
-            sizeof(AST*) * (visitor->variable_defs_size + 1)
-        );
-        visitor->variable_defs[visitor->variable_defs_size] = node;
-        visitor->variable_defs_size += 1;
+        // visiting executable group of nodes
+        case AST_EXECUTABLES:
+            visit_executables(ast, visitor);
+            break;
+
+        // visiting group of variable declarations
+        case AST_VARIABLE_DECLS:
+            visit_variable_declarations(ast, visitor);
+            break;
+        
+        // visiting group of function declarations
+        case AST_FUNCTION_DECLS:
+            visit_function_declarations(ast, visitor);
+            break;
+
+
+        case AST_VARIABLE:
+            visit_variable(ast, visitor);
+            break;
+
+        case AST_ASSIGNMENT:
+            visit_assignment(ast, visitor);
+            break;
+
+
+        case AST_INT:
+            visit_int(ast, visitor);
+            break;
+
+        case AST_FLOAT:
+            visit_float(ast, visitor);
+            break;
+        
+        case AST_BOOLEAN:
+            visit_boolean(ast, visitor);
+            break;
+
+        case AST_CHAR:
+            visit_char(ast, visitor);
+            break;
+
+        case AST_STRING:
+            visit_string(ast, visitor);
+            break;
     }
-
-    return node;
 }
 
-AST* visitor_visit_variable(Visitor* visitor, AST* node) {
-    int i;
-    for(i = 0; i < visitor->variable_defs_size; ++i) {
-        AST* variable_def = visitor->variable_defs[i];
-        if(strcmp(variable_def->variable_def_name, node->variable_name) == 0) {
-            return visitor_visit(visitor, variable_def->variable_def_value);
+void visit_declarations(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_executables(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_compound(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_variable_declarations(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_function_declarations(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+
+void visit_int(AST* obj, Visitor* visitor){
+    
+}
+
+void visit_float(AST* obj, Visitor* visitor) {
+
+}
+
+void visit_boolean(AST* obj, Visitor* visitor) {
+
+}
+
+void visit_char(AST* obj, Visitor* visitor) {
+
+}
+
+void visit_string(AST* obj, Visitor* visitor) {
+
+}
+
+
+
+void visit_variable(AST* obj, Visitor* visitor) {
+    int igarbage;
+    float fgarbage;
+    char cgarbage;
+    char* str = "FALSE";
+    
+    switch(obj->data_type) {
+        case DATA_TYPE_BOOL:
+            if(obj->value == NULL)
+                insert_symbol(symtab, obj->name, obj->data_type, &str, LOCAL); 
+            else
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->boolean_value, LOCAL);
+            break;
+        
+        case DATA_TYPE_INT:
+            if(obj->value == NULL)
+                insert_symbol(symtab, obj->name, obj->data_type, &igarbage, LOCAL);
+            else
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->int_value, LOCAL);
+            break;  
+
+        case DATA_TYPE_CHAR:
+            if(obj->value == NULL) 
+                insert_symbol(symtab, obj->name, obj->data_type, &cgarbage, LOCAL);
+            else 
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->character_value, LOCAL);
+            break;
+        
+        case DATA_TYPE_FLOAT:
+            if(obj->value == NULL)
+                insert_symbol(symtab, obj->name, obj->data_type, &fgarbage, LOCAL);
+            else 
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->float_value, LOCAL);
+            break;
+
+        case DATA_TYPE_STRING:
+            insert_symbol(symtab, obj->name, obj->data_type, &obj->value->string_value, LOCAL);
+            break;
+    }
+}
+
+void visit_assignment(AST* obj, Visitor* visitor) {
+     if (obj->type == AST_ASSIGNMENT) {
+        char* var_name = obj->target_name;
+        
+        // Look up the variable in the symbol table
+        SYMBOL* entry = lookup_symbol(symtab, var_name);
+        
+        if (entry == NULL) {
+            // Variable is not defined in symbol table, report an error
+            printf("Error: An identifier '%s' has not been declared\n", var_name);
+            exit(1);
+        } else if (entry->type == FORMAL) {
+            // Trying to assign a value to a formal parameter, report an error
+            printf("Error: cannot assign value to formal parameter '%s'\n", var_name);
+            exit(1);
         }
+         else {
+            // Variable is defined in symbol table, update its value
+            // entry->name = evaluate_expression(obj->right, symtab); // assuming evaluate_expression evaluates the expression on the right-hand side
+            if(obj->value->type == AST_ASSIGNMENT) {
+                visit_assignment(obj->value, visitor);
+            }
+            
+            switch(entry->data_type) {
+                case DATA_TYPE_INT:
+                    printf("I am an integer");
+                    break;
+            }
+        }
+    } else {
+        // Left-hand side is not a variable, report an error
+        printf("Error: invalid assignment target\n");
+        exit(1);
     }
-
-    printf("Undefined variable '%s'\n", node->variable_name);
-    return node;
 }
 
-AST* visitor_visit_func_call(Visitor* visitor, AST* node) {
-    if(strcmp(node->func_call_name, "DISPLAY") == 0) {
-        return builtin_function_display(visitor, node->func_call_args, node->func_call_args_size);
+float evaluate_non_string_expression(AST* obj, SYMBOL_TABLE* symtab) {
+    switch(obj->type) {
+        case AST_INT:
+            return obj->int_value;
+        case AST_FLOAT:
+            return obj->float_value;
     }
-
-    printf("Undefined function '%s'\n", node->func_call_name);
-    exit(1);
 }
 
-AST* visitor_visit_string(Visitor* visitor, AST* node) {
+float eval_arithmetic_expr(AST* obj, SYMBOL_TABLE* symtab) {
+    
+}
+
+void visit_concat_expression(AST* obj, Visitor* visitor) {
+    
+}
+
+void visit_arithmetic_expression(AST* obj, Visitor* visitor) {
+    
+}
+
+void visit_boolean_expression(AST* obj, Visitor* visitor) {
 
 }
 
-AST* visitor_visit_boolean(Visitor* visitor, AST* node) {
-    return node;
+void visit_unary_expression(AST* obj, Visitor* visitor) {
+
 }
 
-AST* visitor_visit_compound(Visitor* visitor, AST* node) {
-    int i;
-    for(i = 0; i < node->compound_size; i++) {
-        visitor_visit(visitor, node->compound_value[i]);
-    }
+void visit_paren_expression(AST* obj, Visitor* visitor) {
 
-    return init_code_ast(AST_NOOP);
+}
+
+void visit_function_call(AST* obj, Visitor* visitor) {
+
 }

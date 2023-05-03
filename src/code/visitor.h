@@ -2,26 +2,44 @@
 #define _VISITOR_H_
 
 #include "../parser/ast.h"
+#include "../parser/symtab.h"
 
-typedef struct code_Vistor {
-    AST** variable_defs;
-    size_t variable_defs_size;
+typedef struct Visitor {
+    AST* object;
 } Visitor;
 
-Visitor* init_code_visitor();
+int type_check(int type);
+Visitor* init_visitor();
+void visit(AST* ast, Visitor* visitor);
 
-AST* visitor_visit(Visitor* vistor, AST* node);
+// visitor for compound statements
+void visit_compound(AST* ast, Visitor* visitor);
 
-AST* visitor_visit_variable_def(Visitor* vistor, AST* node);
+// visitor for declaration group of nodes
+void visit_declarations(AST* ast, Visitor* visitor);
+// visitor for executable group of nodes
+void visit_executables(AST* ast, Visitor* visitor);
 
-AST* visitor_visit_variable(Visitor* vistor, AST* node);
+// visitor for group of variable declarations
+void visit_variable_declarations(AST* ast, Visitor* visitor);
+// visitor for group of function declarations
+void visit_function_declarations(AST* ast, Visitor* visitor);
 
-AST* visitor_visit_func_call(Visitor* vistor, AST* node);
+void visit_int(AST* obj, Visitor* visitor);
+void visit_string(AST* obj, Visitor* visitor);
+void visit_char(AST* obj, Visitor* visitor);
+void visit_boolean(AST* obj, Visitor* visitor);
+void visit_float(AST* obj, Visitor* visitor);
+void visit_variable(AST* obj, Visitor* visitor);
+void visit_assignment(AST* obj, Visitor* visitor);
+void visit_concat_expression(AST* obj, Visitor* visitor);
+void visit_arithmetic_expression(AST* obj, Visitor* visitor);
+void visit_boolean_expression(AST* obj, Visitor* visitor);
+void visit_unary_expression(AST* obj, Visitor* visitor);
+void visit_paren_expression(AST* obj, Visitor* visitor);
+void visit_function_call(AST* obj, Visitor* visitor);
 
-AST* visitor_visit_string(Visitor* vistor, AST* node);
 
-AST* visitor_visit_boolean(Visitor* vistor, AST* node);
-
-AST* visitor_visit_compound(Visitor* vistor, AST* node);
+float evaluate_non_string_expression(AST* obj, SYMBOL_TABLE* symtab);
 
 #endif

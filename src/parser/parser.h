@@ -39,13 +39,15 @@ void parser_expect_token(Parser* parser, enum TokenType type);
 
 AST* parse_code(Parser* parser);
 
-AST* code_parse_statements(Parser* parser);
+AST* code_parse_declarations_statements(Parser* parser);
 
-AST* code_parse_statement(Parser* parser);
+AST* code_parse_executable_statements(Parser* parser);
+
+AST* code_parse_executable_statement(Parser* parser);
 
 AST* code_parse_variable_declaration(Parser* parser);
 
-AST* code_parse_variable_declaration_prime(Parser* parser);
+AST* code_parse_variable_declaration_prime(Parser* parser, int data_type);
 
 AST* code_parse_assignment(Parser* parser);
 
@@ -53,11 +55,11 @@ AST* code_parse_expression(Parser* parser);
 
 AST* code_parse_arithmetic_expression(Parser* parser);
 
-AST* code_parse_arithmetic_expression_prime(Parser* parser);
+AST* code_parse_arithmetic_expression_prime(Parser* parser, AST* left);
 
 AST* code_parse_term(Parser* parser);
 
-AST* code_parse_term_prime(Parser* parser);
+AST* code_parse_term_prime(Parser* parser, AST* left);
 
 AST* code_parse_factor(Parser* parser);
 
@@ -67,13 +69,9 @@ AST* code_parse_function_call(Parser* parser);
 
 AST* code_parse_args(Parser* parser);
 
-AST* code_parse_args_prime(Parser* parser);
-
 AST* code_parse_arg(Parser* parser);
 
 AST* code_parse_string_val_expression(Parser* parser);
-
-AST* code_parse_string_val_expression_prime(Parser* parser);
 
 AST* code_parse_constants(Parser* parser);
 
@@ -93,7 +91,7 @@ AST* code_parse_switch_case(Parser* parser);
 
 AST* code_parse_boolean_expression(Parser* parser);
 
-AST* code_parse_boolean_expression_prime(Parser* parser);
+AST* code_parse_boolean_expression_prime(Parser* parser, AST* left);
 
 AST* code_parse_boolean_factor(Parser* parser);
 
@@ -109,9 +107,7 @@ AST* code_parse_case_factor(Parser* parser);
 
 AST* code_parse_if_statement(Parser* parser);
 
-AST* code_parse_else_if_statements(Parser* parser);
-
-AST* code_parse_else_if_statement(Parser* parser);
+AST* code_parse_if_else_statements(Parser* parser);
 
 AST* code_parse_else_statement(Parser* parser);
 
@@ -120,5 +116,9 @@ AST* code_parse_while_loop(Parser* parser);
 AST* code_parse_for_loop(Parser* parser);
 
 AST* code_parse_do_while_loop(Parser* parser);
+
+AST* code_parse_break_statement(Parser* parser);
+
+AST* code_parse_continue_statement(Parser* parser);
 
 #endif
