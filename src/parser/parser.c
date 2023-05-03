@@ -46,41 +46,57 @@ void* parser_skip_newlines(Parser* parser) {
 
 // program parser
 AST* parse_code(Parser* parser) {
-    AST* ast = NULL;
+    AST* ast = init_code_ast(AST_COMPOUND);
+    ast->children = init_children(sizeof(AST*));
     parser_skip_newlines(parser);
     parser_expect_token(parser, TOKEN_BEGIN);
     parser_expect_token(parser, TOKEN_CODE);
     parser_expect_token(parser, TOKEN_NEWLINE);
-    ast = code_parse_statements(parser);
+    ast_add_child(ast, code_parse_declarations_statements(parser));
+    ast_add_child(ast, code_parse_executable_statements(parser));
     parser_expect_token(parser, TOKEN_END);
     parser_expect_token(parser, TOKEN_CODE);
     parser_skip_newlines(parser);
+    parser_expect_token(parser, TOKEN_EOF);
     return ast;
 }
 
-AST* code_parse_statements(Parser* parser) {
-    AST* compound = init_code_ast(AST_COMPOUND);
-    compound->children = init_children(sizeof(AST*));
+AST* code_parse_declarations_statements(Parser* parser) {
+    AST* declarations = init_code_ast(AST_DECLARATIONS);
+    declarations->children = init_children(sizeof(AST*));
 
-    AST* statement = code_parse_statement(parser);
-    ast_add_child(compound, statement);
-
-    while(token_peek(parser) == TOKEN_NEWLINE) {
-        parser_expect_token(parser, TOKEN_NEWLINE);    
-        
-        statement = code_parse_statement(parser);
-        if(statement)
-            ast_add_child(compound, statement);
+    while(token_peek(parser) == TOKEN_TYPE) {
+        ast_add_child(declarations, code_parse_variable_declaration(parser));
+        parser_expect_token(parser, TOKEN_NEWLINE);
     }
 
-    return compound;
+    return declarations;
+}
+
+AST* code_parse_executable_statements(Parser* parser) {
+    AST* executable = init_code_ast(AST_EXECUTABLES);
+    executable->children = init_children(sizeof(AST*));
+    
+    while(token_peek(parser) != TOKEN_END) {
+        if(token_peek(parser) == TOKEN_TYPE) {
+            printf(
+                "Syntax Error: Declaration at line %d, col %d must be before executable.\n", 
+                parser->lexer->line, 
+                parser->lexer->col
+            );
+            exit(1);
+        }
+        
+        ast_add_child(executable, code_parse_executable_statement(parser));
+        parser_expect_token(parser, TOKEN_NEWLINE);
+    }
+
+    return executable;
 }
 
 // statement rule
-AST* code_parse_statement(Parser* parser) {
+AST* code_parse_executable_statement(Parser* parser) {
     switch(token_peek(parser)) {
-        case TOKEN_TYPE:
-            return code_parse_variable_declaration(parser);
         case TOKEN_IDENTIFIER:
             parser_expect_token(parser, TOKEN_IDENTIFIER);
             if (token_peek(parser) == TOKEN_COLON) {
@@ -104,9 +120,6 @@ AST* code_parse_statement(Parser* parser) {
 }
 
 AST* code_parse_variable_declaration(Parser* parser) {
-    AST* definitions = init_code_ast(AST_DEFINITIONS);
-    /**/ definitions->children = init_children(sizeof(AST*));
-
     AST* variable_decls = init_code_ast(AST_VARIABLE_DECLS);
     /**/ variable_decls->children = init_children(sizeof(AST*));
 
@@ -131,9 +144,7 @@ AST* code_parse_variable_declaration(Parser* parser) {
         ast_add_child(variable_decls, code_parse_variable_declaration_prime(parser, variable_decl->data_type));
     }
 
-    ast_add_child(definitions, variable_decls);
-
-    return definitions;
+    return variable_decls;
 }
 
 AST* code_parse_variable_declaration_prime(Parser* parser, int data_type) {
@@ -154,27 +165,15 @@ AST* code_parse_variable_declaration_prime(Parser* parser, int data_type) {
 AST* code_parse_assignment(Parser* parser) {
     AST* assignment = init_code_ast(AST_ASSIGNMENT);
 
-    /**/ assignment->name = parser->previous_token->value;
+    /**/ assignment->target_name = parser->previous_token->value;
     if(parser->previous_token->type == TOKEN_IDENTIFIER) {
         parser_expect_token(parser, TOKEN_EQUAL);
-        if(token_peek(parser) == TOKEN_CHARACTER)  {
-            assignment->character_value = parser->current_token->value[0];
-            parser_expect_token(parser, TOKEN_CHARACTER);
-        }
-        else {
-            assignment->value = code_parse_expression(parser);
-        }
+        assignment->value = code_parse_expression(parser);
     } else {
-        /**/ assignment->name = parser->current_token->value;
+        /**/ assignment->target_name = parser->current_token->value;
         parser_expect_token(parser, TOKEN_IDENTIFIER);
         parser_expect_token(parser, TOKEN_EQUAL);
-        if(token_peek(parser) == TOKEN_CHARACTER) {
-            /**/ assignment->character_value = parser->current_token->value[0];
-            parser_expect_token(parser, TOKEN_CHARACTER);
-        }
-        else {
-             /**/ assignment->value = code_parse_expression(parser);
-        }
+        /**/ assignment->value = code_parse_expression(parser);
     }
     
     return assignment;
@@ -221,7 +220,6 @@ AST* code_parse_expression(Parser* parser) {
             // so make advance until we find the closing paren
             while(ts_lookahead(tokens, i) != TOKEN_RPAREN) i++;
             
-            
             // then examine the token after the closing paren
             switch(ts_lookahead(tokens, i + 1)) {
                 case TOKEN_PLUS:
@@ -255,15 +253,46 @@ AST* code_parse_expression(Parser* parser) {
         case TOKEN_SLASH:
         case TOKEN_PERCENT:
         case TOKEN_NUMBER:
+            switch(ts_lookahead(tokens, 0)) {
+                case TOKEN_LESSTHAN:
+                case TOKEN_GREATERTHAN:
+                case TOKEN_GREATEREQUAL:
+                case TOKEN_LESSEQUAL:
+                case TOKEN_EQEQUAL:
+                case TOKEN_NOTEQUAL:
+                case TOKEN_AND:
+                case TOKEN_OR:
+                case TOKEN_NOT:
+                    return code_parse_boolean_expression(parser);
+            }
             return code_parse_arithmetic_expression(parser);
 
         case TOKEN_STRING:
+            switch(ts_lookahead(tokens, 0)) {
+                case TOKEN_LESSTHAN:
+                case TOKEN_GREATERTHAN:
+                case TOKEN_GREATEREQUAL:
+                case TOKEN_LESSEQUAL:
+                case TOKEN_EQEQUAL:
+                case TOKEN_NOTEQUAL:
+                case TOKEN_AND:
+                case TOKEN_OR:
+                case TOKEN_NOT:
+                    return code_parse_boolean_expression(parser);
+            }
+
         case TOKEN_DOLLAR:
         case TOKEN_LBRACKET:
             return code_parse_string_val_expression(parser);
             
         case TOKEN_BOOLEAN:
             return code_parse_boolean_expression(parser);
+
+        case TOKEN_CHARACTER:
+            AST* char_val = init_code_ast(AST_CHAR);
+            char_val->character_value = parser->current_token->value[0];
+            parser_expect_token(parser, TOKEN_CHARACTER);
+            return char_val;
 
         default:
             printf("Syntax Error: invalid syntax at line %d, col %d\n", 
@@ -463,6 +492,10 @@ AST* code_parse_constants(Parser* parser){
                     constant->string_value = parser->current_token->value;
                     parser_expect_token(parser, TOKEN_POUND);
                     break;
+                case TOKEN_AMPERSAND:
+                    constant->string_value = parser->current_token->value;
+                    parser_expect_token(parser, TOKEN_AMPERSAND);
+                    break;
             }
             parser_expect_token(parser, TOKEN_RBRACKET);
             break; 
@@ -635,6 +668,11 @@ AST* code_parse_boolean_factor(Parser* parser){
             constant->name =  parser->current_token->value;
             parser_expect_token(parser, TOKEN_IDENTIFIER);
             break;
+        case TOKEN_STRING:
+            constant = init_code_ast(AST_STRING);
+            constant->string_value =  parser->current_token->value;
+            parser_expect_token(parser, TOKEN_STRING);
+            break;
         case TOKEN_NUMBER:
             constant = init_code_ast(AST_NUMBER);
             if(strchr(parser->current_token->value, '.')) {
@@ -684,7 +722,7 @@ AST* code_parse_case(Parser* parser){
     code_parse_case_factor(parser);
     parser_expect_token(parser, TOKEN_COLON);
     parser_expect_token(parser, TOKEN_NEWLINE);
-    code_parse_statements(parser);
+    code_parse_executable_statements(parser);
     if(token_peek(parser) == TOKEN_BREAK) {
         parser_expect_token(parser, TOKEN_BREAK);
         parser_expect_token(parser, TOKEN_NEWLINE);
@@ -696,7 +734,7 @@ AST* code_parse_default(Parser* parser){
     code_parse_case_factor(parser);
     parser_expect_token(parser, TOKEN_COLON);
     parser_expect_token(parser, TOKEN_NEWLINE);
-    code_parse_statements(parser);
+    code_parse_executable_statements(parser);
     if(token_peek(parser) == TOKEN_BREAK) {
         parser_expect_token(parser, TOKEN_BREAK);
         parser_expect_token(parser, TOKEN_NEWLINE);
@@ -726,7 +764,7 @@ AST* code_parse_if_statement(Parser* parser){
     parser_expect_token(parser, TOKEN_BEGIN);
     parser_expect_token(parser, TOKEN_IF);
     parser_expect_token(parser, TOKEN_NEWLINE);
-    code_parse_statements(parser);
+    code_parse_executable_statements(parser);
     parser_expect_token(parser, TOKEN_END);
     parser_expect_token(parser, TOKEN_IF);
 }
@@ -751,7 +789,7 @@ AST* code_parse_else_statement(Parser* parser){
         parser_expect_token(parser, TOKEN_BEGIN);
         parser_expect_token(parser, TOKEN_IF);
         parser_expect_token(parser, TOKEN_NEWLINE);
-        code_parse_statements(parser);
+        code_parse_executable_statements(parser);
         parser_expect_token(parser, TOKEN_END);
         parser_expect_token(parser, TOKEN_IF);
     }
@@ -766,7 +804,7 @@ AST* code_parse_while_loop(Parser* parser){
     parser_expect_token(parser, TOKEN_BEGIN);
     parser_expect_token(parser, TOKEN_WHILE);
     parser_expect_token(parser, TOKEN_NEWLINE);
-    code_parse_statements(parser);
+    code_parse_executable_statements(parser);
     parser_expect_token(parser, TOKEN_END);
     parser_expect_token(parser, TOKEN_WHILE);
 }

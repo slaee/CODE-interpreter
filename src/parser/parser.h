@@ -39,9 +39,11 @@ void parser_expect_token(Parser* parser, enum TokenType type);
 
 AST* parse_code(Parser* parser);
 
-AST* code_parse_statements(Parser* parser);
+AST* code_parse_declarations_statements(Parser* parser);
 
-AST* code_parse_statement(Parser* parser);
+AST* code_parse_executable_statements(Parser* parser);
+
+AST* code_parse_executable_statement(Parser* parser);
 
 AST* code_parse_variable_declaration(Parser* parser);
 
