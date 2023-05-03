@@ -4,7 +4,8 @@
 #include "types.h"
 
 enum AST_Type {
-    AST_DEFINITIONS,
+    AST_DECLARATIONS,
+    AST_EXECUTABLES,
     AST_VARIABLE_DECLS,
     AST_FUNCTION_DECLS,
     AST_VARIABLE,
@@ -20,7 +21,6 @@ enum AST_Type {
     AST_CHAR,
     AST_STRING,
     AST_BOOLEAN,
-    AST_CHARACTER,
     AST_IF_ELSE_STATEMENT,
     AST_WHILE_STATEMENT,
     AST_FUNCTION_CALL,
@@ -35,6 +35,9 @@ typedef struct ast{
      // variable declarations
     DataType data_type;
     char* name;
+
+    /// assignment
+    char* target_name;
     
     // operators
     int operator;
