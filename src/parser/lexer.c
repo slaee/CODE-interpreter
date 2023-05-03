@@ -38,7 +38,7 @@ int number_T[5][2] = {
 };
 
 
-const char* tokentype_str_value[] = {
+char* tokentype_str_value[] = {
     [TOKEN_BEGIN]       = "BEGIN",
     [TOKEN_CODE]        = "CODE",
     [TOKEN_END]         = "END",
@@ -377,11 +377,7 @@ Token* lex_character(Lexer* lexer) {
 
     char* s = NULL;
     if(lex_peek(lexer) == '\''){
-        s = lex_get_char_as_string(lexer);
-        val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
-        strcat(val, s);
         lex_advance(lexer);
-
         while(lex_peek(lexer) != '\'' && lex_peek(lexer) != NEWLINE && lex_peek(lexer) != EOF) {
             s = lex_get_char_as_string(lexer);
             val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
@@ -391,14 +387,9 @@ Token* lex_character(Lexer* lexer) {
     }
 
     if(lex_peek(lexer) == '\''){
-        s = lex_get_char_as_string(lexer);
-        val = (char*) realloc(val, sizeof(char) * (strlen(val) + strlen(s) + 1));
-        strcat(val, s);
         lex_advance(lexer);
-    }
-    
-    if(val[0] == '\'' && val[strlen(val) - 1] == '\'' && strlen(val) == 3)
         return create_token(TOKEN_CHARACTER, val);
+    }
     else {
         lex_error("Unexpected character", lexer->line, lexer->col);
         exit(1);
