@@ -39,7 +39,7 @@ void visit_unary_expression(AST* obj, Visitor* visitor);
 void visit_paren_expression(AST* obj, Visitor* visitor);
 void visit_function_call(AST* obj, Visitor* visitor);
 void visit_if_else_statement(AST* obj, Visitor* visitor);
-void visit_while(AST* obj, Visitor* visitor);
+void visit_while_statement(AST* obj, Visitor* visitor);
 
 float evaluate_non_string_expression(AST* obj, SYMBOL_TABLE* symtab);
 
