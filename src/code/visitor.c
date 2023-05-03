@@ -236,3 +236,21 @@ void visit_paren_expression(AST* obj, Visitor* visitor) {
 void visit_function_call(AST* obj, Visitor* visitor) {
 
 }
+
+void visit_if_else_statement(AST* ast, Visitor* visitor) {
+    // Evaluate the condition
+    AST* condition = ast->children[0];
+    visit(condition, visitor);
+    
+    // Assuming the condition is of type AST_BOOLEAN and its value is stored in the `boolean_value` field
+    if (strcmp(condition->boolean_value, "true") == 0) {
+        // If the condition is true, visit the if branch
+        AST* if_branch = ast->children[1];
+        visit(if_branch, visitor);
+    } else if (ast->children_size == 3) {
+        // If the condition is false and there's an else branch, visit the else branch
+        AST* else_branch = ast->children[2];
+        visit(else_branch, visitor);
+    }
+}
+
