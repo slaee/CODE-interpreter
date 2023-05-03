@@ -13,46 +13,99 @@ Visitor* init_visitor() {
     Visitor* visitor = (Visitor*) malloc(sizeof(Visitor));
     return visitor;
 }
-    
-void visit(AST* ast, Visitor* visitor) {
-    switch(ast->type) {
-        case AST_COMPOUND: 
-            visit_compound(ast, visitor);
-            break;
-        case AST_DEFINITIONS:
-            int i;
-            for(i = 0; i < ast->children_size; ++i) {
-                switch(ast->children[i]->type) {
-                    case AST_VARIABLE_DECLS:
-                        visit_variable(ast->children[i], visitor);
-                        break;
-                    case AST_FUNCTION_DECLS:
-                        break;
-                }
-            }
-            break;
-        case AST_ASSIGNMENT:
-            visit_assignment(ast, visitor);
-            break;
-    }
-}
 
-void visit_compound(AST* ast, Visitor* visitor) {
+void visit_statements(AST* ast, Visitor* visitor) {
     unsigned int i;
     for(i = 0; i < ast->children_size; ++i) {
         visit(ast->children[i], visitor);
     }
 }
+    
+void visit(AST* ast, Visitor* visitor) {
+    switch(ast->type) {
+        // visiting compound statements
+        case AST_COMPOUND: 
+            visit_compound(ast, visitor);
+            break;
+        
+        // visiting declaration group of nodes
+        case AST_DECLARATIONS:
+            visit_declarations(ast, visitor);
+            break;
+
+        // visiting executable group of nodes
+        case AST_EXECUTABLES:
+            visit_executables(ast, visitor);
+            break;
+
+        // visiting group of variable declarations
+        case AST_VARIABLE_DECLS:
+            visit_variable_declarations(ast, visitor);
+            break;
+        
+        // visiting group of function declarations
+        case AST_FUNCTION_DECLS:
+            visit_function_declarations(ast, visitor);
+            break;
+
+
+        case AST_VARIABLE:
+            visit_variable(ast, visitor);
+            break;
+
+        case AST_ASSIGNMENT:
+            visit_assignment(ast, visitor);
+            break;
+
+
+        case AST_INT:
+            visit_int(ast, visitor);
+            break;
+
+        case AST_FLOAT:
+            visit_float(ast, visitor);
+            break;
+        
+        case AST_BOOLEAN:
+            visit_boolean(ast, visitor);
+            break;
+
+        case AST_CHAR:
+            visit_char(ast, visitor);
+            break;
+
+        case AST_STRING:
+            visit_string(ast, visitor);
+            break;
+    }
+}
+
+void visit_declarations(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_executables(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_compound(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_variable_declarations(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
+void visit_function_declarations(AST* ast, Visitor* visitor) {
+    visit_statements(ast, visitor);
+}
+
 
 void visit_int(AST* obj, Visitor* visitor){
     
 }
 
-void visit_string(AST* obj, Visitor* visitor) {
-
-}
-
-void visit_char(AST* obj, Visitor* visitor) {
+void visit_float(AST* obj, Visitor* visitor) {
 
 }
 
@@ -60,50 +113,67 @@ void visit_boolean(AST* obj, Visitor* visitor) {
 
 }
 
-void visit_float(AST* obj, Visitor* visitor) {
+void visit_char(AST* obj, Visitor* visitor) {
 
 }
 
+void visit_string(AST* obj, Visitor* visitor) {
+
+}
+
+
+
 void visit_variable(AST* obj, Visitor* visitor) {
-    unsigned int i;
-    for(i = 0; i < obj->children_size; ++i) {
-        if(obj->children[i]->type = AST_VARIABLE) {
-            insert_symbol(symtab, obj->children[i]->name, LOCAL);
-        }
+    int igarbage;
+    float fgarbage;
+    char cgarbage;
+    char* str = "FALSE";
+    
+    switch(obj->data_type) {
+        case DATA_TYPE_BOOL:
+            if(obj->value == NULL)
+                insert_symbol(symtab, obj->name, obj->data_type, &str, LOCAL); 
+            else
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->boolean_value, LOCAL);
+            break;
+        
+        case DATA_TYPE_INT:
+            if(obj->value == NULL)
+                insert_symbol(symtab, obj->name, obj->data_type, &igarbage, LOCAL);
+            else
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->int_value, LOCAL);
+            break;  
+
+        case DATA_TYPE_CHAR:
+            if(obj->value == NULL) 
+                insert_symbol(symtab, obj->name, obj->data_type, &cgarbage, LOCAL);
+            else 
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->character_value, LOCAL);
+            break;
+        
+        case DATA_TYPE_FLOAT:
+            if(obj->value == NULL)
+                insert_symbol(symtab, obj->name, obj->data_type, &fgarbage, LOCAL);
+            else 
+                insert_symbol(symtab, obj->name, obj->data_type, &obj->value->float_value, LOCAL);
+            break;
+
+        case DATA_TYPE_STRING:
+            insert_symbol(symtab, obj->name, obj->data_type, &obj->value->string_value, LOCAL);
+            break;
     }
 }
 
-// int type_check(AST* obj) {
-    
-//     switch(type) {
-//         case DATA_TYPE_INT:
-//             visit_int(obj->children[i], visitor);
-//             break;
-//         case DATA_TYPE_STRING:
-//             visit_string(obj->children[i], visitor);
-//             break;
-//         case DATA_TYPE_CHAR:
-//             visit_char(obj->children[i], visitor);
-//             break;
-//         case DATA_TYPE_BOOL:
-//             visit_boolean(obj->children[i], visitor);
-//             break;
-//         case DATA_TYPE_FLOAT:
-//             visit_float(obj->children[i], visitor);
-//             break;
-//     }
-// }
-
 void visit_assignment(AST* obj, Visitor* visitor) {
      if (obj->type == AST_ASSIGNMENT) {
-        char* var_name = obj->name;
+        char* var_name = obj->target_name;
         
         // Look up the variable in the symbol table
         SYMBOL* entry = lookup_symbol(symtab, var_name);
         
         if (entry == NULL) {
             // Variable is not defined in symbol table, report an error
-            printf("Error: variable '%s' is not defined\n", var_name);
+            printf("Error: An identifier '%s' has not been declared\n", var_name);
             exit(1);
         } else if (entry->type == FORMAL) {
             // Trying to assign a value to a formal parameter, report an error
@@ -113,6 +183,15 @@ void visit_assignment(AST* obj, Visitor* visitor) {
          else {
             // Variable is defined in symbol table, update its value
             // entry->name = evaluate_expression(obj->right, symtab); // assuming evaluate_expression evaluates the expression on the right-hand side
+            if(obj->value->type == AST_ASSIGNMENT) {
+                visit_assignment(obj->value, visitor);
+            }
+            
+            switch(entry->data_type) {
+                case DATA_TYPE_INT:
+                    printf("I am an integer");
+                    break;
+            }
         }
     } else {
         // Left-hand side is not a variable, report an error
@@ -121,12 +200,25 @@ void visit_assignment(AST* obj, Visitor* visitor) {
     }
 }
 
-void visit_concat_expression(AST* obj, Visitor* visitor) {
+float evaluate_non_string_expression(AST* obj, SYMBOL_TABLE* symtab) {
+    switch(obj->type) {
+        case AST_INT:
+            return obj->int_value;
+        case AST_FLOAT:
+            return obj->float_value;
+    }
+}
 
+float eval_arithmetic_expr(AST* obj, SYMBOL_TABLE* symtab) {
+    
+}
+
+void visit_concat_expression(AST* obj, Visitor* visitor) {
+    
 }
 
 void visit_arithmetic_expression(AST* obj, Visitor* visitor) {
-
+    
 }
 
 void visit_boolean_expression(AST* obj, Visitor* visitor) {
