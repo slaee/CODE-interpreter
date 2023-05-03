@@ -12,7 +12,9 @@ enum SymbolType {
 };
 
 typedef struct SYMBOL {
+    DataType data_type;
     char *name;
+    void* value;
     enum SymbolType type;
     struct SYMBOL *next;
 } SYMBOL;
@@ -32,7 +34,7 @@ SYMBOL_TABLE* scope_symbol_table(SYMBOL_TABLE *table);
 
 SYMBOL *lookup_symbol(SYMBOL_TABLE *table, char *name);
 
-SYMBOL* insert_symbol(SYMBOL_TABLE *table, char *name, enum SymbolType type);
+SYMBOL* insert_symbol(SYMBOL_TABLE *table, char *name, int datatype, void* value, enum SymbolType type);
 
 void print_symbol_table(SYMBOL_TABLE *table);
 

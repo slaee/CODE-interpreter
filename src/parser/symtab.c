@@ -42,7 +42,7 @@ SYMBOL* lookup_symbol(SYMBOL_TABLE *table, char *name) {
     return NULL;
 }
 
-SYMBOL* insert_symbol(SYMBOL_TABLE *table, char *name, enum SymbolType type) {
+SYMBOL* insert_symbol(SYMBOL_TABLE *table, char *name, int datatype, void* value, enum SymbolType type) {
     int i = hash_fn(name);
     // check redifinition
     if(lookup_symbol(table, name)) {
@@ -50,12 +50,14 @@ SYMBOL* insert_symbol(SYMBOL_TABLE *table, char *name, enum SymbolType type) {
         exit(1);
     }
 
-    SYMBOL *symbol = (SYMBOL *) malloc(sizeof(SYMBOL));
+    SYMBOL* symbol = (SYMBOL*) malloc(sizeof(SYMBOL));
     symbol->name = name;
+    symbol->data_type = datatype;
+    symbol->value = value;
     symbol->type = type;
 
     if(table->size == table->capacity) {
-        table->symbols = (SYMBOL **) realloc(table->symbols, sizeof(SYMBOL *) * table->capacity * 2);
+        table->symbols = (SYMBOL**) realloc(table->symbols, sizeof(SYMBOL*) * table->capacity * 2);
         table->capacity *= 2;
     }
 
@@ -69,7 +71,33 @@ void print_symbol_table(SYMBOL_TABLE *table) {
     for(i = 0; i < SYMBOL_TABLE_SIZE; ++i) {
         if(table->symbols[i] == NULL) continue;
         SYMBOL *symbol = table->symbols[i];
-        printf("Symbol: %s,\t type: %d,\n", symbol->name, symbol->type);
+        //printf("Symbol: %s,\t type: %d\n", symbol->name, symbol->type);
+        switch(symbol->data_type) {
+            case DATA_TYPE_BOOL:
+                char **b = (char**) symbol->value;
+                printf("Symbol: %s,\t type: %d,\t value: %s \n", symbol->name, symbol->type, *b);
+                break;
+                
+            case DATA_TYPE_INT:
+                int *i = (int*) symbol->value;
+                printf("Symbol: %s,\t type: %d,\t value: %d \n", symbol->name, symbol->type, *i);
+                break;
+
+            case DATA_TYPE_FLOAT:
+                float* f = (float*) symbol->value;
+                printf("Symbol: %s,\t type: %d,\t value: %f \n", symbol->name, symbol->type, *f);
+                break;
+
+            case DATA_TYPE_CHAR:
+                char *c = (char*) symbol->value;
+                printf("Symbol: %s,\t type: %d,\t value: %c \n", symbol->name, symbol->type, *c);
+                break;
+            
+            case DATA_TYPE_STRING:
+                char **s = (char**) symbol->value;
+                printf("Symbol: %s,\t type: %d,\t value: %s \n", symbol->name, symbol->type, *s);
+                break;
+        }
     }
 }
 
