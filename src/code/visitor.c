@@ -77,6 +77,14 @@ void visit(AST* ast, Visitor* visitor) {
         case AST_STRING:
             visit_string(ast, visitor);
             break;
+
+        case AST_IF_ELSE_STATEMENT:
+            visit_if_else_statement(ast, visitor);
+            break;
+        
+        case AST_WHILE_STATEMENT:
+            visit_while_loop(ast, visitor);
+            break;
     }
 }
 
@@ -253,4 +261,21 @@ void visit_if_else_statement(AST* ast, Visitor* visitor) {
         visit(else_branch, visitor);
     }
 }
+
+void visit_while_loop(AST* ast, Visitor* visitor) {
+    // Evaluate the condition
+    AST* condition = ast->children[0];
+    visit(condition, visitor);
+    
+    // Assuming the condition is of type AST_BOOLEAN and its value is stored in the `boolean_value` field
+    while (strcmp(condition->boolean_value, "true") == 0) {
+        // If the condition is true, visit the loop body
+        AST* loop_body = ast->children[1];
+        visit(loop_body, visitor);
+
+        // Re-evaluate the condition
+        visit(condition, visitor);
+    }
+}
+
 
