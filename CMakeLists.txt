@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(code-scratch)
+project(code-interpreter)
 
 include_directories(./include/internal)
 include_directories(./include/utils)
