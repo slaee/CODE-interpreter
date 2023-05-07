@@ -218,31 +218,110 @@ float evaluate_non_string_expression(AST* obj, SYMBOL_TABLE* symtab) {
 }
 
 float eval_arithmetic_expr(AST* obj, SYMBOL_TABLE* symtab) {
-    
+    if (obj->type == AST_INT) {
+        return obj->int_val;
+    } else if (obj->type == AST_FLOAT) {
+        return obj->float_val;
+    } else if (obj->type == AST_BINARY_OP) {
+        float left_val = eval_arithmetic_expr(obj->left, symtab);
+        float right_val = eval_arithmetic_expr(obj->right, symtab);
+        switch (obj->op) {
+            case OP_ADD:
+                return left_val + right_val;
+            case OP_SUB:
+                return left_val - right_val;
+            case OP_MUL:
+                return left_val * right_val;
+            case OP_DIV:
+                return left_val / right_val;
+            default:
+                printf("Invalid operator in arithmetic expression.\n");
+                exit(1);
+        }
+    } else if (obj->type == AST_VAR) {
+        SYMBOL* sym = lookup_symbol(symtab, obj->var_name);
+        if (sym == NULL) {
+            printf("Variable %s not found.\n", obj->var_name);
+            exit(1);
+        } else if (sym->type != SYM_FLOAT && sym->type != SYM_INT) {
+            printf("Variable %s is not of arithmetic type.\n", obj->var_name);
+            exit(1);
+        } else if (sym->type == SYM_INT) {
+            return (float)sym->int_val;
+        } else {
+            return sym->float_val;
+        }
+    } else {
+        printf("Invalid node type in arithmetic expression.\n");
+        exit(1);
+    }
 }
 
 void visit_concat_expression(AST* obj, Visitor* visitor) {
-    
+    char* left_str = eval_string_expr(obj->left, visitor->symtab);
+    char* right_str = eval_string_expr(obj->right, visitor->symtab);
+    char* result_str = (char*)malloc(strlen(left_str) + strlen(right_str) + 1);
+    strcpy(result_str, left_str);
+    strcat(result_str, right_str);
+    visitor->result = (void*)result_str;
 }
+
 
 void visit_arithmetic_expression(AST* obj, Visitor* visitor) {
-    
+    // Evaluate the left and right operands
+    float left_operand = evaluate_non_string_expression(obj->left, visitor->symtab);
+    float right_operand = evaluate_non_string_expression(obj->right, visitor->symtab);
+
+    // Perform the arithmetic operation based on the node's type
+    float result;
+    switch (obj->type) {
+        case AST_ADD:
+            result = left_operand + right_operand;
+            break;
+        case AST_SUBTRACT:
+            result = left_operand - right_operand;
+            break;
+        case AST_MULTIPLY:
+            result = left_operand * right_operand;
+            break;
+        case AST_DIVIDE:
+            if (right_operand == 0) {
+                printf("Error: division by zero\n");
+                exit(1);
+            }
+            result = left_operand / right_operand;
+            break;
+        default:
+            printf("Error: unknown arithmetic operation\n");
+            exit(1);
+    }
+
+    // Store the result in the AST node
+    obj->float_value = result;
 }
 
-void visit_boolean_expression(AST* obj, Visitor* visitor) {
 
+void visit_boolean_expression(AST* obj, Visitor* visitor) {
+    BooleanExpression* boolean_expr = (BooleanExpression*) obj;
+    if (boolean_expr->op == AND) {
+        visit(boolean_expr->left, visitor);
+        visit(boolean_expr->right, visitor);
+    } else if (boolean_expr->op == OR) {
+        visit(boolean_expr->left, visitor);
+        visit(boolean_expr->right, visitor);
+    } else if (boolean_expr->op == NOT) {
+        visit(boolean_expr->operand, visitor);
+    }
 }
 
 void visit_unary_expression(AST* obj, Visitor* visitor) {
-
+    UnaryExpression* unary_expr = (UnaryExpression*) obj;
+    visit(unary_expr->operand, visitor);
 }
 
 void visit_paren_expression(AST* obj, Visitor* visitor) {
-
-}
-
-void visit_function_call(AST* obj, Visitor* visitor) {
-
+    ParenExpression* paren_expr = (ParenExpression*) obj;
+    visit(paren_expr->expr, visitor);
 }
 
 void visit_if_else_statement(AST* ast, Visitor* visitor) {
